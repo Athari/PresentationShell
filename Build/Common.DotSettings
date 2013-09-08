@@ -1,0 +1,41 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Description/@EntryValue">Model property</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=FIELD/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=FIELD/Expression/@EntryValue">decapitalize(NAME)</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=FIELD/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=FIELD/Order/@EntryValue">2</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=NAME/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=NAME/Expression/@EntryValue">suggestVariableName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=NAME/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=TYPE/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=TYPE/Expression/@EntryValue">suggestVariableType()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Field/=TYPE/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">3.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/Type/@EntryValue">InCSharpTypeMember</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Shortcut/@EntryValue">mprop</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4954515D0F810B42BC54E4E5FF7B81B1/Text/@EntryValue">private $TYPE$ _$FIELD$;&#xD;
+public $TYPE$ $NAME$&#xD;
+{&#xD;
+    get { return Get(ref _$FIELD$); }&#xD;
+    set { Set(ref _$FIELD$, value); }&#xD;
+}</s:String>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</wpf:ResourceDictionary>
