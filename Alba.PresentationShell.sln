@@ -21,7 +21,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{B87EEBC4-1D78-4764-9680-81D02713B2EB}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.gitmodules = .gitmodules
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Framework", "Alba.Framework\Alba.Framework\Alba.Framework.csproj", "{62730B23-450C-4B93-8D5C-F7037DB6D263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Framework.Presentation", "Alba.Framework\Alba.Framework.Presentation\Alba.Framework.Presentation.csproj", "{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +38,14 @@ Global
 		{1E819ADE-593D-4B99-B3FB-21A72B48E08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E819ADE-593D-4B99-B3FB-21A72B48E08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E819ADE-593D-4B99-B3FB-21A72B48E08E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62730B23-450C-4B93-8D5C-F7037DB6D263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62730B23-450C-4B93-8D5C-F7037DB6D263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62730B23-450C-4B93-8D5C-F7037DB6D263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62730B23-450C-4B93-8D5C-F7037DB6D263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
