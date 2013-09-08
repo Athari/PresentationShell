@@ -1,12 +1,20 @@
 ﻿<Window x:Class="Alba.PresentationShell.Sample.MainWindow" x:Name="self"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ALba.PresentationShell.Sample" Height="900" Width="525" WindowStartupLocation="CenterScreen"
+        Title="Alba.PresentationShell.Sample" Height="900" Width="600"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
         DataContext="{Binding ElementName=self}">
     <Control.Resources>
         <DataTemplate DataType="{x:Type ImageSource}">
-            <Image Source="{Binding}" Stretch="None"/>
+            <Image Source="{Binding}" Stretch="None" Margin="3"/>
         </DataTemplate>
     </Control.Resources>
-    <ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel"/>
+    <!--<ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel"/>-->
+    <ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+    </ListBox>
 </Window>
