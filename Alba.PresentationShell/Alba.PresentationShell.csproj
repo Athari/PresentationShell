@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -37,10 +38,30 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native.WinUser.cs" />
+    <Compile Include="Interop\Native.WinGdi.cs" />
+    <Compile Include="Interop\Native.WinDef.cs" />
+    <Compile Include="Interop\Dll.cs" />
+    <Compile Include="Interop\Native.ShellApi.cs" />
+    <Compile Include="Interop\ShellApi\SHFILEINFO.cs" />
+    <Compile Include="Interop\ShellApi\SHGFI.cs" />
+    <Compile Include="Interop\WinGdi\BITMAP.cs" />
+    <Compile Include="Interop\CommonControls\IImageList.cs" />
+    <Compile Include="Interop\WinDef\POINT.cs" />
+    <Compile Include="Interop\WinDef\RECT.cs" />
+    <Compile Include="Interop\CommCtrl\ILD.cs" />
+    <Compile Include="Interop\CommCtrl\ILS.cs" />
+    <Compile Include="Interop\CommonControls\IMAGEINFO.cs" />
+    <Compile Include="Interop\CommonControls\IMAGELISTDRAWPARAMS.cs" />
+    <Compile Include="Interop\CommonControls\IMAGELISTSTATS.cs" />
+    <Compile Include="Interop\ShellApi\SHIL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\Build\Common.targets" Condition="Exists('$(SolutionDir)\Build\Common.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

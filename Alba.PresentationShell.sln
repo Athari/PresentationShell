@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Framework", "Alba.Fram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Framework.Presentation", "Alba.Framework\Alba.Framework.Presentation\Alba.Framework.Presentation.csproj", "{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.PresentationShell.Sample", "Alba.PresentationShell.Sample\Alba.PresentationShell.Sample.csproj", "{D14035DD-3476-47FF-9582-44A60A619A4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D14035DD-3476-47FF-9582-44A60A619A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D14035DD-3476-47FF-9582-44A60A619A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D14035DD-3476-47FF-9582-44A60A619A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D14035DD-3476-47FF-9582-44A60A619A4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
