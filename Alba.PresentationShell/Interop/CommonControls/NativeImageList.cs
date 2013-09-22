@@ -10,7 +10,7 @@ using Alba.Interop.ShellApi;
 
 namespace Alba.Interop.CommonControls
 {
-    public class NativeImageList : IDisposable
+    internal class NativeImageList : IDisposable
     {
         private IImageList _imageList;
         private List<ImageSource> _iconImageSources;

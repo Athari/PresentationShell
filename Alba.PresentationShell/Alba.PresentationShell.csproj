@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native.ShellObjects.cs" />
     <Compile Include="Interop\Native.WinUser.cs" />
     <Compile Include="Interop\Native.WinGdi.cs" />
     <Compile Include="Interop\Native.WinDef.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Interop\Native.ShellApi.cs" />
     <Compile Include="Interop\ShellApi\SHFILEINFO.cs" />
     <Compile Include="Interop\ShellApi\SHGFI.cs" />
+    <Compile Include="Interop\ShellObjects\PIDLIST.cs" />
     <Compile Include="Interop\WinGdi\BITMAP.cs" />
     <Compile Include="Interop\CommonControls\IImageList.cs" />
     <Compile Include="Interop\WinDef\POINT.cs" />

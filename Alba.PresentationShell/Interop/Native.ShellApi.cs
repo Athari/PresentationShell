@@ -21,11 +21,8 @@ namespace Alba.Interop
         [DllImport (Dll.Shell, CharSet = CharSet.Auto)]
         private static extern IntPtr SHGetFileInfo (string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
 
-        [DllImport (Dll.Shell, EntryPoint = "#727")]
+        [DllImport (Dll.Shell)]
         private static extern int SHGetImageList (SHIL iImageList, [MarshalAs (UnmanagedType.LPStruct)] Guid riid, [MarshalAs (UnmanagedType.IUnknown)] out object ppv);
-
-        [DllImport (Dll.Shell, EntryPoint = "#727")]
-        private static extern int SHGetImageList (SHIL iImageList, [MarshalAs (UnmanagedType.LPStruct)] Guid riid, out IImageList ppv);
 
         public static int SHGetFileInfo_IconIndex (string fileName)
         {
@@ -36,7 +33,7 @@ namespace Alba.Interop
 
         public static IImageList SHGetImageList (SHIL iImageList)
         {
-            IImageList ppv;
+            object ppv;
             SHGetImageList(iImageList, typeof(IImageList).GUID, out ppv);
             return (IImageList)ppv;
         }

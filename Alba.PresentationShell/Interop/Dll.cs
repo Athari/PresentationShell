@@ -1,6 +1,6 @@
 ﻿namespace Alba.Interop
 {
-    public class Dll
+    internal class Dll
     {
         public const string Gdi = "gdi32.dll";
         public const string Kernel = "kernel32.dll";

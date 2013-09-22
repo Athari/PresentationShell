@@ -1,6 +1,6 @@
 ﻿namespace Alba.Interop.ShellApi
 {
-    public enum SHIL
+    internal enum SHIL
     {
         /// <summary>The image size is normally 32x32 pixels. However, if the Use large icons option is selected from the Effects section of the Appearance tab in Display Properties, the image is 48x48 pixels.</summary>
         LARGE = 0x0,
