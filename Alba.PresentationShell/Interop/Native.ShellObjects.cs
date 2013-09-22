@@ -128,7 +128,7 @@ namespace Alba.Interop
         /// <returns>TRUE if the pidl parameter is NULL or the ITEMIDLIST structure pointed to by pidl is empty; otherwise FALSE.</returns>
         internal static bool ILIsEmpty ([In] PIDLIST pidl)
         {
-            return pidl.Handle == IntPtr.Zero || pidl.MkidCb == 0;
+            return pidl.Handle == IntPtr.Zero || pidl.Cb == 0;
         }
 
         /// <summary>Retrieves the next SHITEMID structure in an ITEMIDLIST structure.</summary>
@@ -137,7 +137,7 @@ namespace Alba.Interop
         /// <remarks>To verify if the return value is NULL, use ILIsEmpty.</remarks>
         internal static PIDLIST ILNext ([In] PIDLIST pidl)
         {
-            return ILSkip(pidl, pidl.MkidCb);
+            return ILSkip(pidl, pidl.Cb);
         }
 
         /// <summary>Skips a given number of bytes in a constant, unaligned, relative ITEMIDLIST structure.</summary>
@@ -146,7 +146,7 @@ namespace Alba.Interop
         /// <returns>(PCUIDLIST_RELATIVE | PUIDLIST_RELATIVE) When this function returns, if pidl and cb are valid, contains a constant pointer to the ITEMIDLIST structure that results after the skip. Otherwise, the value is meaningless.</returns>
         internal static PIDLIST ILSkip ([In] PIDLIST pidl, int cb)
         {
-            return new PIDLIST(Marshal.ReadIntPtr(pidl.Handle, cb));
+            return new PIDLIST(IntPtr.Add(pidl.Handle, cb));
         }
     }
 }
