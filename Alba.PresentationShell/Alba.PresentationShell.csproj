@@ -50,7 +50,14 @@
     <Compile Include="Interop\Native.ShellApi.cs" />
     <Compile Include="Interop\ShellApi\SHFILEINFO.cs" />
     <Compile Include="Interop\ShellApi\SHGFI.cs" />
+    <Compile Include="Interop\ShellObjects\IEnumIDList.cs" />
+    <Compile Include="Interop\ShellObjects\IShellFolder.cs" />
     <Compile Include="Interop\ShellObjects\PIDLIST.cs" />
+    <Compile Include="Interop\ShellObjects\SFGAO.cs" />
+    <Compile Include="Interop\ShellObjects\SHCONTF.cs" />
+    <Compile Include="Interop\ShellObjects\ShellItem.cs" />
+    <Compile Include="Interop\ShellObjects\SHGDN.cs" />
+    <Compile Include="Interop\ShellTypes\STRRET.cs" />
     <Compile Include="Interop\WinGdi\BITMAP.cs" />
     <Compile Include="Interop\CommonControls\IImageList.cs" />
     <Compile Include="Interop\WinDef\POINT.cs" />
