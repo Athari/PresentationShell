@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using Alba.Framework.Collections;
@@ -28,7 +28,7 @@ namespace Alba.PresentationShell.Sample
 
         private void OnLoaded (object sender, RoutedEventArgs routedEventArgs)
         {
-            IntPtr ptr0 = Marshal.AllocCoTaskMem(sizeof(Int64));
+            /*IntPtr ptr0 = Marshal.AllocCoTaskMem(sizeof(Int64));
             Marshal.WriteInt64(ptr0, 0);
             PIDLIST pidl0 = new PIDLIST(ptr0);
             PIDLIST pidlW = Native.ILCreateFromPath("C:\\Windows");
@@ -44,7 +44,17 @@ namespace Alba.PresentationShell.Sample
                 Native.ILGetSize(pidlN),
                 Native.ILFindChild(pidlW, pidlN),
                 pidl0, pidlW, pidlN
-                ));
+                ));*/
+            var sb = new StringBuilder();
+            using (var folderDesktop = NativeShellFolder.GetDesktopFolder()) {
+                foreach (PIDLIST pidl in folderDesktop.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
+                    sb.AppendFormat("{0} - {1}\n",
+                        folderDesktop.GetDisplayNameOf(pidl, SHGDN.NORMAL),
+                        folderDesktop.GetDisplayNameOf(pidl, SHGDN.FORPARSING));
+                    pidl.Free();
+                }
+            }
+            MessageBox.Show(this, sb.ToString());
 
             new OpenFileDialog().ShowDialog();
 

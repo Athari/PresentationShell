@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native.ShellLightApi.cs" />
     <Compile Include="Interop\Native.ShellObjects.cs" />
     <Compile Include="Interop\Native.WinUser.cs" />
     <Compile Include="Interop\Native.WinGdi.cs" />
@@ -52,12 +53,15 @@
     <Compile Include="Interop\ShellApi\SHGFI.cs" />
     <Compile Include="Interop\ShellObjects\IEnumIDList.cs" />
     <Compile Include="Interop\ShellObjects\IShellFolder.cs" />
+    <Compile Include="Interop\ShellObjects\NativeEnumIDList.cs" />
+    <Compile Include="Interop\ShellObjects\NativeShellFolder.cs" />
     <Compile Include="Interop\ShellObjects\PIDLIST.cs" />
     <Compile Include="Interop\ShellObjects\SFGAO.cs" />
     <Compile Include="Interop\ShellObjects\SHCONTF.cs" />
     <Compile Include="Interop\ShellObjects\ShellItem.cs" />
     <Compile Include="Interop\ShellObjects\SHGDN.cs" />
     <Compile Include="Interop\ShellTypes\STRRET.cs" />
+    <Compile Include="Interop\WinError\FACILITY.cs" />
     <Compile Include="Interop\WinGdi\BITMAP.cs" />
     <Compile Include="Interop\CommonControls\IImageList.cs" />
     <Compile Include="Interop\WinDef\POINT.cs" />
@@ -68,9 +72,15 @@
     <Compile Include="Interop\CommonControls\IMAGELISTDRAWPARAMS.cs" />
     <Compile Include="Interop\CommonControls\IMAGELISTSTATS.cs" />
     <Compile Include="Interop\ShellApi\SHIL.cs" />
+    <Compile Include="Interop\WinError\HRESULT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Alba.Framework\Alba.Framework\Alba.Framework.csproj">
+      <Project>{62730B23-450C-4B93-8D5C-F7037DB6D263}</Project>
+      <Name>Alba.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(SolutionDir)\Build\Common.targets" Condition="Exists('$(SolutionDir)\Build\Common.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

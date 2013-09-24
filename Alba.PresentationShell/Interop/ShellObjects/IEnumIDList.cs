@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
@@ -17,7 +18,7 @@ namespace Alba.Interop.ShellObjects
         /// <remarks>If this method returns a Component Object Model (COM) error code (as determined by the FAILED macro), then no entries in the rgelt array are valid on exit. If this method returns a success code (such as S_OK or S_FALSE), then the ULONG pointed to by the pceltFetched parameter determines how many entries in the rgelt array are valid on exit.<br/>
         /// The distinction is important in the case where celt > 1. For example, if you pass celt=10 and there are only 3 elements left, *pceltFetched will be 3 and the method will return S_FALSE meaning that you reached the end of the file. The three fetched elements will be stored into rgelt and are valid.</remarks>
         [PreserveSig]
-        int Next ([In] uint celt, [Out] out PIDLIST rgelt, out uint pceltFetched);
+        HRESULT Next ([In] uint celt, [Out] out PIDLIST rgelt, out uint pceltFetched);
         /// <summary>Skips the specified number of elements in the enumeration sequence.</summary>
         /// <param name="celt">The number of item identifiers to skip.</param>
         void Skip ([In] uint celt);

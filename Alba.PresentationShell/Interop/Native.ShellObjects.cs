@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using Alba.Interop.ShellObjects;
 
 namespace Alba.Interop
@@ -96,7 +97,10 @@ namespace Alba.Interop
         internal static extern bool ILRemoveLastID ([In, Out] ref PIDLIST pidl);
 
         [DllImport (Dll.Shell, PreserveSig = false)]
-        internal static extern void ILSaveToStream ([In, MarshalAs (UnmanagedType.IUnknown)] object /*IStream*/ pstm, [In] PIDLIST pidl);
+        internal static extern void ILSaveToStream ([In] IStream pstm, [In] PIDLIST pidl);
+
+        [DllImport (Dll.Shell, PreserveSig = false)]
+        private static extern void SHGetDesktopFolder ([Out] out IShellFolder ppshf);
 
         /// <summary>Clones a full, or absolute, ITEMIDLIST structure.</summary>
         /// <param name="pidl">(PCUIDLIST_ABSOLUTE) A pointer to the full, or absolute, ITEMIDLIST structure to be cloned.</param>
@@ -147,6 +151,13 @@ namespace Alba.Interop
         internal static PIDLIST ILSkip ([In] PIDLIST pidl, int cb)
         {
             return new PIDLIST(IntPtr.Add(pidl.Handle, cb));
+        }
+
+        internal static IShellFolder SHGetDesktopFolder ()
+        {
+            IShellFolder ppshf;
+            SHGetDesktopFolder(out ppshf);
+            return ppshf;
         }
     }
 }

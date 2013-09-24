@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using Alba.Interop.ShellTypes;
+using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
@@ -33,7 +34,8 @@ namespace Alba.Interop.ShellObjects
         /// If the method returns S_FALSE, then the folder contains no suitable subobjects and the pointer specified in ppenumIDList is set to NULL.<br/>
         /// If the method fails, an error value is returned and the pointer specified in ppenumIDList is set to NULL.<br/>
         /// If the folder contains no suitable subobjects, then the IShellFolder::EnumObjects method is permitted either to set *ppenumIDList to NULL and return S_FALSE, or to set *ppenumIDList to an enumerator that produces no objects and return S_OK. Calling applications must be prepared for both success cases.</remarks>
-        void EnumObjects ([In] HWND hwnd, [In] SHCONTF grfFlags, [Out] out IEnumIDList ppenumIDList);
+        [PreserveSig]
+        HRESULT EnumObjects ([In] HWND hwnd, [In] SHCONTF grfFlags, [Out] out IEnumIDList ppenumIDList);
         /// <summary>Retrieves a handler, typically the Shell folder object that implements IShellFolder for a particular item. Optional parameters that control the construction of the handler are passed in the bind context.</summary>
         /// <param name="pidl">(PCUIDLIST_RELATIVE) The address of an ITEMIDLIST structure (PIDL) that identifies the subfolder. This value can refer to an item at any level below the parent folder in the namespace hierarchy. The structure contains one or more SHITEMID structures, followed by a terminating NULL.</param>
         /// <param name="pbc">A pointer to an IBindCtx interface on a bind context object that can be used to pass parameters to the construction of the handler.</param>
@@ -57,7 +59,7 @@ namespace Alba.Interop.ShellObjects
         /// <param name="pidl2">(PCUIDLIST_RELATIVE) A pointer to the second item's ITEMIDLIST structure. It will be relative to the folder. This ITEMIDLIST structure can contain more than one element; therefore, the entire structure must be compared, not just the first element.</param>
         /// <returns>If this method is successful, the CODE field of the HRESULT contains one of the following values. For information regarding the extraction of the CODE field from the returned HRESULT, see Remarks. If this method is unsuccessful, it returns a COM error code.</returns>
         [PreserveSig]
-        int CompareIDs ([In] int lParam, [In] PIDLIST pidl1, [In] PIDLIST pidl2);
+        HRESULT CompareIDs ([In] int lParam, [In] PIDLIST pidl1, [In] PIDLIST pidl2);
         /// <summary>Requests an object that can be used to obtain information from or interact with a folder object.</summary>
         /// <param name="hwndOwner">A handle to the owner window. If you have implemented a custom folder view object, your folder view window should be created as a child of hwndOwner.</param>
         /// <param name="riid">A reference to the IID of the interface to retrieve through ppv, typically IID_IShellView.</param>
@@ -68,7 +70,7 @@ namespace Alba.Interop.ShellObjects
         /// <param name="cidl">The number of items from which to retrieve attributes.</param>
         /// <param name="apidl">(PCUITEMID_CHILD_ARRAY) The address of an array of pointers to ITEMIDLIST structures, each of which uniquely identifies an item relative to the parent folder. Each ITEMIDLIST structure must contain exactly one SHITEMID structure followed by a terminating zero.</param>
         /// <param name="rgfInOut">Pointer to a single ULONG value that, on entry, contains the bitwise SFGAO attributes that the calling application is requesting. On exit, this value contains the requested attributes that are common to all of the specified items.</param>
-        void GetAttributesOf ([In] uint cidl, [In] PIDLIST[] apidl, [In, Out] ref SFGAO rgfInOut);
+        void GetAttributesOf ([In] int cidl, [In, MarshalAs (UnmanagedType.LPArray)] PIDLIST[] apidl, [In, Out] ref SFGAO rgfInOut);
         /// <summary>Gets an object that can be used to carry out actions on the specified file objects or folders.</summary>
         /// <param name="hwndOwner">A handle to the owner window that the client should specify if it displays a dialog box or message box.</param>
         /// <param name="cidl">The number of file objects or subfolders specified in the apidl parameter.</param>
@@ -77,8 +79,7 @@ namespace Alba.Interop.ShellObjects
         /// <param name="rgfReserved">Reserved.</param>
         /// <param name="ppv">When this method returns successfully, contains the interface pointer requested in riid.</param>
         /// <remarks>If cidl is greater than one, the IShellFolder::GetUIObjectOf implementation should only succeed if it can create one object for all items specified in apidl. If the implementation cannot create one object for all items, this method will fail.</remarks>
-        void GetUIObjectOf ([In] HWND hwndOwner, [In] uint cidl, [In] PIDLIST[] apidl, [In, MarshalAs (UnmanagedType.LPStruct)] Guid riid,
-            [In, Out] ref uint rgfReserved, [Out, MarshalAs (UnmanagedType.IUnknown)] out object ppv);
+        void GetUIObjectOf ([In] IntPtr hwndOwner, [In] int cidl, [In, MarshalAs (UnmanagedType.LPArray)] PIDLIST[] apidl, [In, MarshalAs (UnmanagedType.LPStruct)] Guid riid, [In, Out] ref uint rgfReserved, [Out, MarshalAs (UnmanagedType.IUnknown)] out object ppv);
         /// <summary>Retrieves the display name for the specified file object or subfolder.</summary>
         /// <param name="pidl">(PCUITEMID_CHILD) PIDL that uniquely identifies the file object or subfolder relative to the parent folder.</param>
         /// <param name="uFlags">Flags used to request the type of display name to return. For a list of possible values, see the SHGDNF enumerated type.</param>
@@ -97,6 +98,6 @@ namespace Alba.Interop.ShellObjects
         /// <remarks>Changing the display name of a file system object, or a folder within it, renames the file or directory.<br/>
         /// Before calling this method, applications should call IShellFolder::GetAttributesOf and check that the SFGAO_CANRENAME flag is set. Note that this flag is essentially a hint to namespace clients. It does not necessarily imply that IShellFolder::SetNameOf will succeed or fail.</remarks>
         void SetNameOf ([In] HWND hwnd, [In] PIDLIST pidl, [In, MarshalAs (UnmanagedType.LPWStr)] string pszName,
-            [In] uint uFlags, [Out] out PIDLIST ppidlOut);
+            [In] SHGDN uFlags, [Out] out PIDLIST ppidlOut);
     }
 }

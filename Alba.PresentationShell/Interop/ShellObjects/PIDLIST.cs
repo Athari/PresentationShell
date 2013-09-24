@@ -24,6 +24,11 @@ namespace Alba.Interop.ShellObjects
             _handle = handle;
         }
 
+        public void Free ()
+        {
+            Marshal.FreeCoTaskMem(Handle);
+        }
+
         public override string ToString ()
         {
             var sb = new StringBuilder();
