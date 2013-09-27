@@ -1,12 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using Alba.Framework.Text;
 using Alba.Interop.CommonControls;
 using Alba.Interop.ShellApi;
+using Alba.Interop.WinUser;
 
 namespace Alba.Interop
 {
+    using HICON = IntPtr;
+
     internal partial class Native
     {
+        [DllImport (Dll.User, CharSet = CharSet.Auto)]
+        private static extern int PrivateExtractIcons (string lpszFile, int nIconIndex, int cxIcon, int cyIcon, out HICON phicon, IntPtr piconid, uint nIcons, LR flags);
+
         /// <summary>Retrieves information about an object in the file system, such as a file, folder, directory, or drive root.</summary>
         /// <param name="pszPath">A pointer to a null-terminated string of maximum length MAX_PATH that contains the path and file name. Both absolute and relative paths are valid.<br/>
         /// If the uFlags parameter includes the SHGFI_PIDL flag, this parameter must be the address of an ITEMIDLIST (PIDL) structure that contains the list of item identifiers that uniquely identifies the file within the Shell's namespace. The PIDL must be a fully qualified PIDL. Relative PIDLs are not allowed.<br/>
@@ -23,6 +31,15 @@ namespace Alba.Interop
 
         [DllImport (Dll.Shell)]
         private static extern int SHGetImageList (SHIL iImageList, [MarshalAs (UnmanagedType.LPStruct)] Guid riid, [MarshalAs (UnmanagedType.IUnknown)] out object ppv);
+
+        public static void PrivateExtractIcons (string lpszFile, int nIconIndex, int cxIcon, out HICON phicon, LR flags)
+        {
+            int res = PrivateExtractIcons(lpszFile, nIconIndex, cxIcon, cxIcon, out phicon, IntPtr.Zero, 1, flags);
+            if (res == -1)
+                throw new FileNotFoundException("Could not load icon from '{0}'.".Fmt(lpszFile), lpszFile);
+            if (res != 1)
+                phicon = IntPtr.Zero;
+        }
 
         public static int SHGetFileInfo_IconIndex (string fileName)
         {

@@ -5,7 +5,7 @@ using System.Text;
 namespace Alba.Interop.ShellObjects
 {
     [StructLayout (LayoutKind.Sequential)]
-    internal struct PIDLIST
+    internal struct PIDLIST : IDisposable
     {
         private readonly IntPtr _handle;
 
@@ -24,7 +24,7 @@ namespace Alba.Interop.ShellObjects
             _handle = handle;
         }
 
-        public void Free ()
+        public void Dispose ()
         {
             Marshal.FreeCoTaskMem(Handle);
         }

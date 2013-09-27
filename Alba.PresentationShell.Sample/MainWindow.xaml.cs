@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using Alba.Framework.Collections;
 using Alba.Interop;
-using Alba.Interop.CommonControls;
 using Alba.Interop.ShellApi;
 using Alba.Interop.ShellObjects;
-using Microsoft.Win32;
+using Alba.Windows.Media;
 
 namespace Alba.PresentationShell.Sample
 {
@@ -46,20 +43,30 @@ namespace Alba.PresentationShell.Sample
                 pidl0, pidlW, pidlN
                 ));*/
             var sb = new StringBuilder();
-            using (var folderDesktop = NativeShellFolder.GetDesktopFolder()) {
-                foreach (PIDLIST pidl in folderDesktop.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
+            var iconList = new ShellIconList();
+
+            /*using (var folderDesktop = NativeShellFolder.GetDesktopFolder())
+            using (var folderPidl = folderDesktop.ParseDisplayName("C:\\Windows"))
+            using (var folder = folderDesktop.BindToObject<IShellFolder>(folderPidl).ToNative())
+            using (var folderIcon = folder.QueryInterface<IShellIcon>().ToNative()) {*/
+
+            using (var folder = NativeShellFolder.GetDesktopFolder())
+            using (var folderIcon = folder.QueryInterface<IShellIcon>().ToNative()) {
+                foreach (PIDLIST pidl in folder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
                     sb.AppendFormat("{0} - {1}\n",
-                        folderDesktop.GetDisplayNameOf(pidl, SHGDN.NORMAL),
-                        folderDesktop.GetDisplayNameOf(pidl, SHGDN.FORPARSING));
-                    pidl.Free();
+                        folder.GetDisplayNameOf(pidl, SHGDN.NORMAL),
+                        folder.GetDisplayNameOf(pidl, SHGDN.FORPARSING));
+                    //JumboIcons.Add(iconList.ExtractIcon(folder, pidl, 32, GILI.FORSHELL));
+                    JumboIcons.Add(iconList.GetShellIcon(folderIcon, pidl, SHIL.JUMBO, GILI.FORSHELL));
+                    pidl.Dispose();
                 }
             }
-            MessageBox.Show(this, sb.ToString());
+            //MessageBox.Show(this, sb.ToString());
 
-            new OpenFileDialog().ShowDialog();
+            //new OpenFileDialog().ShowDialog();
 
-            var _jumboShellImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
-            JumboIcons.AddRange(Enumerable.Range(0, _jumboShellImageList.ImageCount).Select(_jumboShellImageList.GetIconImageSource));
+            //var _jumboShellImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
+            //JumboIcons.AddRange(Enumerable.Range(0, _jumboShellImageList.ImageCount).Select(_jumboShellImageList.GetIconImageSource));
         }
     }
 }

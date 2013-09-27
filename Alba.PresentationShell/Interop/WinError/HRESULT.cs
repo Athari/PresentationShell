@@ -14,6 +14,7 @@ namespace Alba.Interop.WinError
 
         public static readonly HRESULT S_OK = new HRESULT(0);
         public static readonly HRESULT S_FALSE = new HRESULT(1);
+        public static readonly HRESULT E_PENDING = new HRESULT(0x8000000A);
         /*public static readonly HRESULT E_NOTIMPL = new HRESULT(2147500033);
         public static readonly HRESULT E_NOINTERFACE = new HRESULT(2147500034);
         public static readonly HRESULT E_POINTER = new HRESULT(2147500035);

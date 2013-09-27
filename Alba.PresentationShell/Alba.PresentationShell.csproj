@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -42,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native.WinCodec.cs" />
     <Compile Include="Interop\Native.ShellLightApi.cs" />
     <Compile Include="Interop\Native.ShellObjects.cs" />
     <Compile Include="Interop\Native.WinUser.cs" />
@@ -49,12 +52,19 @@
     <Compile Include="Interop\Native.WinDef.cs" />
     <Compile Include="Interop\Dll.cs" />
     <Compile Include="Interop\Native.ShellApi.cs" />
+    <Compile Include="Interop\NativeExts.cs" />
     <Compile Include="Interop\ShellApi\SHFILEINFO.cs" />
     <Compile Include="Interop\ShellApi\SHGFI.cs" />
+    <Compile Include="Interop\ShellObjects\IShellIcon.cs" />
+    <Compile Include="Interop\ShellObjects\GILI.cs" />
+    <Compile Include="Interop\ShellObjects\GILR.cs" />
     <Compile Include="Interop\ShellObjects\IEnumIDList.cs" />
+    <Compile Include="Interop\ShellObjects\IExtractIcon.cs" />
     <Compile Include="Interop\ShellObjects\IShellFolder.cs" />
     <Compile Include="Interop\ShellObjects\NativeEnumIDList.cs" />
+    <Compile Include="Interop\ShellObjects\NativeExtractIcon.cs" />
     <Compile Include="Interop\ShellObjects\NativeShellFolder.cs" />
+    <Compile Include="Interop\ShellObjects\NativeShellIcon.cs" />
     <Compile Include="Interop\ShellObjects\PIDLIST.cs" />
     <Compile Include="Interop\ShellObjects\SFGAO.cs" />
     <Compile Include="Interop\ShellObjects\SHCONTF.cs" />
@@ -73,6 +83,8 @@
     <Compile Include="Interop\CommonControls\IMAGELISTSTATS.cs" />
     <Compile Include="Interop\ShellApi\SHIL.cs" />
     <Compile Include="Interop\WinError\HRESULT.cs" />
+    <Compile Include="Interop\WinUser\LR.cs" />
+    <Compile Include="Windows\Media\ShellIconList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +93,7 @@
       <Name>Alba.Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\Build\Common.targets" Condition="Exists('$(SolutionDir)\Build\Common.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

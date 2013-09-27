@@ -15,7 +15,7 @@ namespace Alba.Interop.CommonControls
         private IImageList _imageList;
         private List<ImageSource> _iconImageSources;
 
-        private NativeImageList (IImageList imageList)
+        public NativeImageList (IImageList imageList)
         {
             _imageList = imageList;
             _iconImageSources = new List<ImageSource>(ImageCount);
@@ -45,8 +45,7 @@ namespace Alba.Interop.CommonControls
         {
             IntPtr hicon;
             _imageList.GetIcon(index, ILD.IMAGE, out hicon);
-            BitmapSource img = Imaging.CreateBitmapSourceFromHIcon(hicon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            Native.DestroyIcon(hicon);
+            BitmapSource img = Native.CreateBitmapSourceFromHIcon(hicon);
             SetCachedIconImageSource(index, img);
             return img;
         }
