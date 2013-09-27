@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Media;
 using Alba.Framework.Collections;
 using Alba.Framework.Sys;
@@ -49,7 +50,24 @@ namespace Alba.Windows.Media
         public ImageSource GetShellIcon (NativeShellIcon shellIcon, PIDLIST pidl, SHIL iconSize, GILI iconFlags)
         {
             int index = shellIcon.GetIconOf(pidl, iconFlags);
-            return index != -1 ? GetImageList(iconSize).GetIconImageSource(index) : null;
+            return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
+        }
+
+        public ImageSource GetShellIconOverlay (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl, SHIL iconSize)
+        {
+            try {
+                int index = shellIconOverlay.GetOverlayIconIndex(pidl);
+                return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
+            }
+            catch (COMException) { // TODO Log error
+                return null;
+            }
+            catch (ArgumentException) {
+                return null;
+            }
+            catch (InvalidCastException) {
+                return null;
+            }
         }
 
         private struct IconLocation
@@ -85,6 +103,7 @@ namespace Alba.Windows.Media
             public ImageSource GetIconImageSource (int index)
             {
                 return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
+                //return Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index));
             }
         }
 

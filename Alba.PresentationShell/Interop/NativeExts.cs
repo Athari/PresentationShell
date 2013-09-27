@@ -29,5 +29,10 @@ namespace Alba.Interop
         {
             return @this != null ? new NativeShellIcon(@this) : null;
         }
+
+        public static NativeShellIconOverlay ToNative (this IShellIconOverlay @this)
+        {
+            return @this != null ? new NativeShellIconOverlay(@this) : null;
+        }
     }
 }

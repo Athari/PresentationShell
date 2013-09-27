@@ -13,8 +13,8 @@
     <ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
-                <!--<WrapPanel Orientation="Horizontal"/>-->
-                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
+                <WrapPanel Orientation="Horizontal"/>
+                <!--<VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>-->
             </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
     </ListBox>

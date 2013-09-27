@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native.CommonControls.cs" />
     <Compile Include="Interop\Native.WinCodec.cs" />
     <Compile Include="Interop\Native.ShellLightApi.cs" />
     <Compile Include="Interop\Native.ShellObjects.cs" />
@@ -61,10 +62,13 @@
     <Compile Include="Interop\ShellObjects\IEnumIDList.cs" />
     <Compile Include="Interop\ShellObjects\IExtractIcon.cs" />
     <Compile Include="Interop\ShellObjects\IShellFolder.cs" />
+    <Compile Include="Interop\ShellObjects\IShellIconOverlay.cs" />
     <Compile Include="Interop\ShellObjects\NativeEnumIDList.cs" />
     <Compile Include="Interop\ShellObjects\NativeExtractIcon.cs" />
     <Compile Include="Interop\ShellObjects\NativeShellFolder.cs" />
     <Compile Include="Interop\ShellObjects\NativeShellIcon.cs" />
+    <Compile Include="Interop\ShellObjects\NativeShellIconOverlay.cs" />
+    <Compile Include="Interop\ShellObjects\OI.cs" />
     <Compile Include="Interop\ShellObjects\PIDLIST.cs" />
     <Compile Include="Interop\ShellObjects\SFGAO.cs" />
     <Compile Include="Interop\ShellObjects\SHCONTF.cs" />
