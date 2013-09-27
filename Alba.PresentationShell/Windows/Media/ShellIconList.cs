@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Media;
+using Alba.Framework.Collections;
 using Alba.Framework.Sys;
 using Alba.Interop;
 using Alba.Interop.CommonControls;
@@ -17,16 +17,11 @@ namespace Alba.Windows.Media
     internal class ShellIconList
     {
         private readonly Dictionary<IconLocation, IconData> _icons = new Dictionary<IconLocation, IconData>();
-        private readonly List<NativeImageList> _imageLists;
+        private readonly ShellImageListDictionary _imageLists = new ShellImageListDictionary();
 
-        public ShellIconList ()
+        private ShellImageList GetImageList (SHIL iconSize)
         {
-            _imageLists = Enumerable.Range(0, (int)(SHIL.LAST + 1)).Select(i => (NativeImageList)null).ToList();
-        }
-
-        public NativeImageList GetImageList (SHIL iconSize)
-        {
-            return _imageLists[(int)iconSize] ?? (_imageLists[(int)iconSize] = NativeImageList.GetShellImageList(iconSize));
+            return _imageLists.GetOrAdd(iconSize, () => new ShellImageList(iconSize));
         }
 
         public ImageSource ExtractIcon (NativeShellFolder shellFolder, PIDLIST pidl, int iconSize, GILI iconFlags)
@@ -75,5 +70,38 @@ namespace Alba.Windows.Media
 
         private struct IconData
         {}
+
+        private class ShellImageList
+        {
+            private readonly NativeImageList _imageList;
+            private readonly IndexDictionary<ImageSource> _imageSourceCache;
+
+            public ShellImageList (SHIL iconSize)
+            {
+                _imageList = NativeImageList.GetShellImageList(iconSize);
+                _imageSourceCache = new IndexDictionary<ImageSource>();
+            }
+
+            public ImageSource GetIconImageSource (int index)
+            {
+                return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
+            }
+        }
+
+        private class ShellImageListDictionary : IndexDictionaryBase<SHIL, ShellImageList>
+        {
+            public ShellImageListDictionary () : base((int)(SHIL.LAST + 1))
+            {}
+
+            protected override int KeyToIndex (SHIL key)
+            {
+                return (int)key;
+            }
+
+            protected override SHIL IndexToKey (int index)
+            {
+                return (SHIL)index;
+            }
+        }
     }
 }

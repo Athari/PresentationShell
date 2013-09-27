@@ -6,14 +6,15 @@
         DataContext="{Binding ElementName=self}">
     <Control.Resources>
         <DataTemplate DataType="{x:Type ImageSource}">
-            <Image Source="{Binding}" Stretch="None" Margin="3"/>
+            <Image Source="{Binding}" Stretch="None" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </DataTemplate>
     </Control.Resources>
     <!--<ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel"/>-->
     <ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
+                <!--<WrapPanel Orientation="Horizontal"/>-->
+                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
             </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
     </ListBox>

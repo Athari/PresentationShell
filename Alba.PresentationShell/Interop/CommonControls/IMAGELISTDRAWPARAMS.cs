@@ -7,7 +7,7 @@ namespace Alba.Interop.CommonControls
     [StructLayout (LayoutKind.Sequential, Pack = 4)]
     internal struct IMAGELISTDRAWPARAMS
     {
-        public uint cbSize;
+        public int cbSize;
         [MarshalAs (UnmanagedType.IUnknown)]
         public object himl;
         public int i;

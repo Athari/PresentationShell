@@ -6,6 +6,9 @@ using Alba.Interop.CommonControls;
 using Alba.Interop.ShellApi;
 using Alba.Interop.WinUser;
 
+// TODO Useful functions: SHGetStockIconInfo (folder icon parts)
+// TODO Useful "deprecated" functions: PickIconDlg, SHExtractIconsW, SHGetSetFolderCustomSettings, SHGetSetSettings, IColumnProvider
+
 namespace Alba.Interop
 {
     using HICON = IntPtr;

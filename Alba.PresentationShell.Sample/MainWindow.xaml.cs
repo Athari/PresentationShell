@@ -45,19 +45,20 @@ namespace Alba.PresentationShell.Sample
             var sb = new StringBuilder();
             var iconList = new ShellIconList();
 
-            /*using (var folderDesktop = NativeShellFolder.GetDesktopFolder())
-            using (var folderPidl = folderDesktop.ParseDisplayName("C:\\Windows"))
+            using (var folderDesktop = NativeShellFolder.GetDesktopFolder())
+            using (var folderPidl = folderDesktop.ParseDisplayName("C:\\Windows\\System32"))
+                //using (var folderPidl = folderDesktop.ParseDisplayName("::{26EE0668-A00A-44D7-9371-BEB064C98683}"))
             using (var folder = folderDesktop.BindToObject<IShellFolder>(folderPidl).ToNative())
-            using (var folderIcon = folder.QueryInterface<IShellIcon>().ToNative()) {*/
-
-            using (var folder = NativeShellFolder.GetDesktopFolder())
             using (var folderIcon = folder.QueryInterface<IShellIcon>().ToNative()) {
+            /*using (var folder = NativeShellFolder.GetDesktopFolder())
+            using (var folderIcon = folder.QueryInterface<IShellIcon>().ToNative()) {*/
                 foreach (PIDLIST pidl in folder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
                     sb.AppendFormat("{0} - {1}\n",
                         folder.GetDisplayNameOf(pidl, SHGDN.NORMAL),
                         folder.GetDisplayNameOf(pidl, SHGDN.FORPARSING));
-                    //JumboIcons.Add(iconList.ExtractIcon(folder, pidl, 32, GILI.FORSHELL));
-                    JumboIcons.Add(iconList.GetShellIcon(folderIcon, pidl, SHIL.JUMBO, GILI.FORSHELL));
+                    JumboIcons.Add(folderIcon != null
+                        ? iconList.GetShellIcon(folderIcon, pidl, SHIL.JUMBO, GILI.FORSHELL)
+                        : iconList.ExtractIcon(folder, pidl, 256, GILI.FORSHELL));
                     pidl.Dispose();
                 }
             }
@@ -65,8 +66,8 @@ namespace Alba.PresentationShell.Sample
 
             //new OpenFileDialog().ShowDialog();
 
-            //var _jumboShellImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
-            //JumboIcons.AddRange(Enumerable.Range(0, _jumboShellImageList.ImageCount).Select(_jumboShellImageList.GetIconImageSource));
+            //var jumboImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
+            //JumboIcons.AddRange(Enumerable.Range(0, jumboImageList.ImageCount).Select(jumboImageList.GetIconImageSource));
         }
     }
 }

@@ -7,27 +7,27 @@ namespace Alba.Interop
     {
         public static NativeEnumIDList ToNative (this IEnumIDList @this)
         {
-            return new NativeEnumIDList(@this);
+            return @this != null ? new NativeEnumIDList(@this) : null;
         }
 
         public static NativeExtractIcon ToNative (this IExtractIcon @this)
         {
-            return new NativeExtractIcon(@this);
+            return @this != null ? new NativeExtractIcon(@this) : null;
         }
 
         public static NativeImageList ToNative (this IImageList @this)
         {
-            return new NativeImageList(@this);
+            return @this != null ? new NativeImageList(@this) : null;
         }
 
         public static NativeShellFolder ToNative (this IShellFolder @this)
         {
-            return new NativeShellFolder(@this);
+            return @this != null ? new NativeShellFolder(@this) : null;
         }
 
         public static NativeShellIcon ToNative (this IShellIcon @this)
         {
-            return new NativeShellIcon(@this);
+            return @this != null ? new NativeShellIcon(@this) : null;
         }
     }
 }
