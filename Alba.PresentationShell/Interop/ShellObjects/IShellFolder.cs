@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security;
 using Alba.Interop.ShellTypes;
 using Alba.Interop.WinError;
 
@@ -10,6 +11,7 @@ namespace Alba.Interop.ShellObjects
 
     /// <summary>Exposed by all Shell namespace folder objects, its methods are used to manage folders.</summary>
     [ComImport, Guid ("000214E6-0000-0000-C000-000000000046"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IShellFolder
     {
         /// <summary>Translates the display name of a file object or a folder into an item identifier list.</summary>

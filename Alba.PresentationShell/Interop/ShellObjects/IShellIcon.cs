@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security;
 using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
     /// <summary>Exposes a method that obtains an icon index for an IShellFolder object.</summary>
     [ComImport, Guid ("000214E5-0000-0000-C000-000000000046"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IShellIcon
     {
         /// <summary>Gets an icon for an object inside a specific folder.</summary>

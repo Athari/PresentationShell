@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using Alba.Interop.WinError;
 
@@ -9,6 +10,7 @@ namespace Alba.Interop.ShellObjects
 
     /// <summary>Exposes methods that allow a client to retrieve the icon that is associated with one of the objects in a folder.</summary>
     [ComImport, Guid ("000214fa-0000-0000-c000-000000000046"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IExtractIcon
     {
         /// <summary>Gets the location and index of an icon.</summary>

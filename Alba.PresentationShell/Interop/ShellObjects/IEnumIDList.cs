@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security;
 using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
     /// <summary>Exposes a standard set of methods used to enumerate the pointers to item identifier lists (PIDLs) of the items in a Shell folder. When a folder's IShellFolder::EnumObjects method is called, it creates an enumeration object and passes a pointer to the object's IEnumIDList interface back to the calling application.</summary>
     [ComImport, Guid ("000214F2-0000-0000-C000-000000000046"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IEnumIDList
     {
         /// <summary>Retrieves the specified number of item identifiers in the enumeration sequence and advances the current position by the number of items retrieved.</summary>

@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security;
 using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
     /// <summary>Exposes methods that are used by a namespace extension to specify icon overlays for the objects it contains.</summary>
     [ComImport, Guid ("7D688A70-C613-11D0-999B-00C04FD655E1"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IShellIconOverlay
     {
         /// <summary>Gets the overlay index in the system image list.</summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security;
 using Alba.Interop.CommCtrl;
 using Alba.Interop.WinDef;
 
@@ -11,6 +12,7 @@ namespace Alba.Interop.CommonControls
     using HDC = IntPtr;
 
     [ComImport, Guid ("46EB5926-582E-4017-9FDF-E8998DAA0950"), InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+    [SuppressUnmanagedCodeSecurity]
     internal interface IImageList
     {
         void Add ([In] ref HBITMAP hbmImage, [In] ref HBITMAP hbmMask, out int pi);
