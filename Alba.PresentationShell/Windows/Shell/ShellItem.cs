@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using Alba.Diagnostics;
 using Alba.Framework.Collections;
+using Alba.Framework.Diagnostics;
 using Alba.Framework.Sys;
+using Alba.Framework.Text;
 using Alba.Framework.Windows.Mvvm;
 using Alba.Interop;
 using Alba.Interop.ShellApi;
@@ -13,10 +18,8 @@ namespace Alba.Windows.Shell
 {
     public class ShellItem : ModelBase<ShellItem>, IDisposable
     {
-        internal static readonly ObservableCollectionEx<ShellItem> DummyChildren = new ObservableCollectionEx<ShellItem> {
-            new ShellItem()
-            //new ShellItem(null, null, PIDLIST.Empty, NativeShellFolder.GetDesktopFolder())
-        };
+        private static readonly ILog Log = GetLog(AlbaPresentaionShellTraceSources.Interop);
+        internal static readonly ObservableCollectionEx<ShellItem> DummyChildren = new ObservableCollectionEx<ShellItem> { new ShellItem() };
         internal static readonly ObservableCollectionEx<ShellItem> NoChildren = new ObservableCollectionEx<ShellItem>();
 
         private ShellTree _tree;
@@ -48,6 +51,11 @@ namespace Alba.Windows.Shell
         private NativeShellFolder ParentShellFolder
         {
             get { return (_parent ?? this)._shellFolder; }
+        }
+
+        private bool IsDesktop
+        {
+            get { return _pidl.IsEmpty; }
         }
 
         public bool HasSubFolders
@@ -169,12 +177,18 @@ namespace Alba.Windows.Shell
         {
             if (_children == DummyChildren) {
                 _children = new ObservableCollectionEx<ShellItem>();
-                foreach (PIDLIST childPidl in _shellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
-                    NativeShellFolder childShellFolder = _shellFolder.BindToObject<IShellFolder>(childPidl).ToNative();
-                    ShellItem childItem = new ShellItem(_tree, this, childPidl, childShellFolder);
-                    if (!childItem.HasSubFolders)
-                        childItem._children = NoChildren;
-                    _children.Add(childItem);
+                try {
+                    foreach (PIDLIST childPidl in _shellFolder.EnumObjects(_tree.WindowHandle, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
+                        NativeShellFolder childShellFolder = _shellFolder.BindToObject<IShellFolder>(childPidl).ToNative();
+                        ShellItem childItem = new ShellItem(_tree, this, childPidl, childShellFolder);
+                        if (!childItem.HasSubFolders)
+                            childItem._children = NoChildren;
+                        _children.Add(childItem);
+                    }
+                }
+                catch (Exception e) {
+                    if (e.IsAnyType<FileNotFoundException, Win32Exception>())
+                        Log.Error("Failed to enumerate items of folder '{0}'.".Fmt(DisplayName), e);
                 }
                 OnPropertyChanged("Children");
             }
@@ -182,16 +196,24 @@ namespace Alba.Windows.Shell
 
         private ImageSource GetIconOverlay (SHIL iconSize)
         {
+            if (IsDesktop)
+                return null;
             NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative(false);
-            return shellIconOverlay != null ? _tree.IconList.GetShellIconOverlay(shellIconOverlay, _pidl, iconSize) : null;
+            return shellIconOverlay != null ? _tree.IconList.GetIconOverlay(shellIconOverlay, _pidl, iconSize) : null;
         }
 
         private ImageSource GetIcon (SHIL iconSize, GILI iconAttrs)
         {
-            NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative(false);
-            return shellIcon != null
-                ? _tree.IconList.GetShellIcon(shellIcon, _pidl, iconSize, iconAttrs)
-                : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
+            if (IsDesktop) {
+                using (PIDLIST desktoPidl = Native.SHGetKnownFolderIDList(FOLDERID.Desktop))
+                    return _tree.IconList.GetIconByIndex(iconSize, Native.SHGetFileInfo(desktoPidl, SHGFI.SYSICONINDEX).iIcon);
+            }
+            else {
+                NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative(false);
+                return shellIcon != null
+                    ? _tree.IconList.GetIcon(shellIcon, _pidl, iconSize, iconAttrs)
+                    : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
+            }
         }
 
         public void Dispose ()

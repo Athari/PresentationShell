@@ -51,15 +51,20 @@ namespace Alba.Windows.Media
             }
         }
 
-        public ImageSource GetShellIcon (NativeShellIcon shellIcon, PIDLIST pidl, SHIL iconSize, GILI iconFlags)
+        public ImageSource GetIcon (NativeShellIcon shellIcon, PIDLIST pidl, SHIL iconSize, GILI iconFlags)
         {
             int index = shellIcon.GetIconOf(pidl, iconFlags);
-            return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
+            return GetIconByIndex(iconSize, index);
         }
 
-        public ImageSource GetShellIconOverlay (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl, SHIL iconSize)
+        public ImageSource GetIconOverlay (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl, SHIL iconSize)
         {
             int index = shellIconOverlay.GetOverlayIconIndex(pidl);
+            return GetIconByIndex(iconSize, index);
+        }
+
+        public ImageSource GetIconByIndex (SHIL iconSize, int index)
+        {
             return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
         }
 
@@ -113,9 +118,7 @@ namespace Alba.Windows.Media
 
             public ImageSource GetIconImageSource (int index)
             {
-                // TODO !!! Cache icon image sources
-                //return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
-                return Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index));
+                return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
             }
         }
 

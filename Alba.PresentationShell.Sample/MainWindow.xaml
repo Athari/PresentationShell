@@ -5,10 +5,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         xmlns:a="urn:alba:framework"
         xmlns:shell="clr-namespace:Alba.Windows.Shell;assembly=Alba.PresentationShell"
+        xmlns:local="clr-namespace:Alba.PresentationShell.Sample"
         Title="Alba.PresentationShell.Sample" Height="900" Width="600"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        FocusManager.FocusedElement="{Binding ElementName=tvwShell}"
-        DataContext="{Binding ElementName=self}">
+        DataContext="{Binding ElementName=self}"
+        SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display"
+        FocusManager.FocusedElement="{Binding ElementName=tvwShell}">
     <Control.Resources>
 
         <a:YieldConverter x:Key="convYield"/>
@@ -17,7 +19,7 @@
             <Image Source="{Binding}" Stretch="None" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </DataTemplate>
 
-        <HierarchicalDataTemplate DataType="{x:Type shell:ShellItem}" ItemsSource="{Binding Children}">
+        <HierarchicalDataTemplate x:Key="tplShellItemTreeSmall" DataType="{x:Type shell:ShellItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Grid MinWidth="16" MinHeight="16" Margin="1">
                     <Image Source="{Binding IconSmall}" Stretch="None" VerticalAlignment="Center"/>
@@ -32,18 +34,48 @@
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
         </Style>
 
+        <DataTemplate x:Key="tplShellItemLarge" DataType="{x:Type shell:ShellItem}">
+            <StackPanel Orientation="Vertical" Width="80" Margin="3">
+                <Grid MinWidth="32" MinHeight="32" Margin="1" HorizontalAlignment="Center">
+                    <Image Source="{Binding IconLarge}" Stretch="None" VerticalAlignment="Center"/>
+                    <Image Source="{Binding IconOverlayLarge}" Stretch="None" VerticalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding DisplayName}" MaxHeight="48" Margin="3 1" HorizontalAlignment="Center"
+                        TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" FontSize="12"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <local:WrapView x:Key="viwShellItem" ItemTemplate="{StaticResource tplShellItemLarge}"/>
+
     </Control.Resources>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="200"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TreeView x:Name="tvwShell" Grid.Row="0" ItemsSource="{Binding Desktop, Converter={StaticResource convYield}}"
-                ItemContainerStyle="{StaticResource stytviShellItem}" VirtualizingPanel.ScrollUnit="Pixel"/>
+        <TreeView x:Name="tvwShell" Grid.Row="0" Grid.Column="0" Margin="4"
+                ItemsSource="{Binding Desktop, Converter={StaticResource convYield}}"
+                ItemTemplate="{StaticResource tplShellItemTreeSmall}" ItemContainerStyle="{StaticResource stytviShellItem}"
+                VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsVirtualizing="True"/>
+        <ListView x:Name="lvwShell" Grid.Row="0" Grid.Column="1" Margin="4"
+                ItemsSource="{Binding SelectedItem.Children, ElementName=tvwShell}"
+                ItemTemplate="{StaticResource tplShellItemLarge}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VerticalContentAlignment="Top">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
 
-        <ListBox x:Name="lstShellIcons" Grid.Row="1" ItemsSource="{Binding ShellIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox x:Name="lstShellIcons" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
+                ItemsSource="{Binding ShellIcons}"
+                VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>

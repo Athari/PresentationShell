@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Alba.PresentationShell.Sample"
+        xmlns:a="urn:alba:framework">
+
+    <Style x:Key="{ComponentResourceKey local:WrapView, styWrapView}" TargetType="ListView">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="ItemContainerStyle" Value="{a:SelfBinding (ListView.View).(local:WrapView.ItemContainerStyle)}"/>
+        <Setter Property="ItemTemplate" Value="{Binding (ListView.View).(local:WrapView.ItemTemplate)}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                            Width="{a:AncestorBinding (FrameworkElement.ActualWidth), ScrollContentPresenter}"
+                            ItemWidth="{a:AncestorBinding (ListView.View).(local:WrapView.ItemWidth), ListView}"
+                            ItemHeight="{a:AncestorBinding (ListView.View).(local:WrapView.ItemHeight), ListView}"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

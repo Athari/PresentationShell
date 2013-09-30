@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 using Alba.Framework.Text;
 using Alba.Interop.CommonControls;
 using Alba.Interop.ShellApi;
+using Alba.Interop.ShellObjects;
 using Alba.Interop.WinUser;
 
 // TODO Useful functions: SHGetStockIconInfo (folder icon parts)
 // TODO Useful "deprecated" functions: PickIconDlg, SHExtractIconsW, SHGetSetFolderCustomSettings, SHGetSetSettings, IColumnProvider
-
 namespace Alba.Interop
 {
     using HICON = IntPtr;
@@ -32,6 +32,9 @@ namespace Alba.Interop
         [DllImport (Dll.Shell, CharSet = CharSet.Auto)]
         private static extern IntPtr SHGetFileInfo (string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
 
+        [DllImport (Dll.Shell, CharSet = CharSet.Auto)]
+        private static extern IntPtr SHGetFileInfo (PIDLIST pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
+
         [DllImport (Dll.Shell)]
         private static extern int SHGetImageList (SHIL iImageList, [MarshalAs (UnmanagedType.LPStruct)] Guid riid, [MarshalAs (UnmanagedType.IUnknown)] out object ppv);
 
@@ -44,11 +47,11 @@ namespace Alba.Interop
                 phicon = IntPtr.Zero;
         }
 
-        public static int SHGetFileInfo_IconIndex (string fileName)
+        public static SHFILEINFO SHGetFileInfo (PIDLIST pidl, SHGFI flags)
         {
             var info = new SHFILEINFO();
-            SHGetFileInfo(fileName, 0, ref info, Marshal.SizeOf(info), SHGFI.SYSICONINDEX);
-            return info.iIcon;
+            SHGetFileInfo(pidl, 0, ref info, Marshal.SizeOf(info), SHGFI.PIDL | flags);
+            return info;
         }
 
         public static IImageList SHGetImageList (SHIL iImageList)

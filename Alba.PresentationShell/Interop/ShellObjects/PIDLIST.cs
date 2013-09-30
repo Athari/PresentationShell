@@ -18,6 +18,11 @@ namespace Alba.Interop.ShellObjects
             _empty = new PIDLIST(ptrEmpty);
         }
 
+        public PIDLIST (IntPtr handle)
+        {
+            _handle = handle;
+        }
+
         public static PIDLIST Empty
         {
             get { return _empty; }
@@ -33,9 +38,9 @@ namespace Alba.Interop.ShellObjects
             get { return (ushort)Marshal.ReadInt16(Handle); }
         }
 
-        public PIDLIST (IntPtr handle) : this()
+        public bool IsEmpty
         {
-            _handle = handle;
+            get { return Native.ILIsEmpty(this); }
         }
 
         public void Dispose ()

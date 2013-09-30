@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using Alba.Interop;
@@ -22,6 +23,9 @@ namespace Alba.PresentationShell.Sample
             ShellIcons = new ObservableCollection<ImageSource>();
             Desktop = new ShellTree().Desktop;
             Desktop.IsSelected = true;
+            Desktop.IsExpanded = true;
+
+            Icon = Desktop.IconLarge;
 
             InitializeComponent();
 
@@ -89,9 +93,9 @@ namespace Alba.PresentationShell.Sample
                         folder.GetDisplayNameOf(pidl, SHGDN.NORMAL),
                         folder.GetDisplayNameOf(pidl, SHGDN.FORPARSING));
                     ShellIcons.Add(folderIcon != null
-                        ? iconList.GetShellIcon(folderIcon, pidl, iconSize, GILI.FORSHELL)
+                        ? iconList.GetIcon(folderIcon, pidl, iconSize, GILI.FORSHELL)
                         : iconList.ExtractIcon(folder, pidl, iconSize, GILI.FORSHELL));
-                    ShellIcons.Add(iconList.GetShellIconOverlay(folderIconOverlay, pidl, iconSize));
+                    ShellIcons.Add(iconList.GetIconOverlay(folderIconOverlay, pidl, iconSize));
                     pidl.Dispose();
                 }
             }
@@ -101,6 +105,43 @@ namespace Alba.PresentationShell.Sample
 
             //var jumboImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
             //JumboIcons.AddRange(Enumerable.Range(0, jumboImageList.ImageCount).Select(jumboImageList.GetIconImageSource));
+        }
+    }
+
+    public class WrapView : ViewBase
+    {
+        public static readonly DependencyProperty ItemContainerStyleProperty = ItemsControl.ItemContainerStyleProperty.AddOwner(typeof(WrapView));
+        public static readonly DependencyProperty ItemTemplateProperty = ItemsControl.ItemTemplateProperty.AddOwner(typeof(WrapView));
+        public static readonly DependencyProperty ItemWidthProperty = WrapPanel.ItemWidthProperty.AddOwner(typeof(WrapView));
+        public static readonly DependencyProperty ItemHeightProperty = WrapPanel.ItemHeightProperty.AddOwner(typeof(WrapView));
+
+        public Style ItemContainerStyle
+        {
+            get { return (Style)GetValue(ItemContainerStyleProperty); }
+            set { SetValue(ItemContainerStyleProperty, value); }
+        }
+
+        public DataTemplate ItemTemplate
+        {
+            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+            set { SetValue(ItemTemplateProperty, value); }
+        }
+
+        public double ItemWidth
+        {
+            get { return (double)GetValue(ItemWidthProperty); }
+            set { SetValue(ItemWidthProperty, value); }
+        }
+
+        public double ItemHeight
+        {
+            get { return (double)GetValue(ItemHeightProperty); }
+            set { SetValue(ItemHeightProperty, value); }
+        }
+
+        protected override object DefaultStyleKey
+        {
+            get { return new ComponentResourceKey(GetType(), "styWrapView"); }
         }
     }
 }
