@@ -36,7 +36,7 @@
         </Style>
 
         <DataTemplate x:Key="tplShellItemLarge" DataType="{x:Type shell:ShellItem}">
-            <StackPanel Orientation="Vertical" Width="80" Margin="3">
+            <StackPanel Orientation="Vertical" Width="80" Margin="3" UseLayoutRounding="True">
                 <Grid MinWidth="32" MinHeight="32" Margin="1" HorizontalAlignment="Center">
                     <Image Source="{Binding IconLarge}" Stretch="None" VerticalAlignment="Center"/>
                     <Image Source="{Binding IconOverlayLarge}" Stretch="None" VerticalAlignment="Center"/>
@@ -52,7 +52,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MinWidth="200"/>
+            <ColumnDefinition Width="1*" MinWidth="220"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
