@@ -5,7 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         xmlns:a="urn:alba:framework"
         xmlns:shell="clr-namespace:Alba.Windows.Shell;assembly=Alba.PresentationShell"
-        xmlns:local="clr-namespace:Alba.PresentationShell.Sample"
         Title="Alba.PresentationShell.Sample" Height="900" Width="600"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         DataContext="{Binding ElementName=self}"
@@ -58,13 +57,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="1*"/>
+            <!--<RowDefinition Height="1*"/>-->
         </Grid.RowDefinitions>
 
         <TreeView x:Name="tvwShell" Grid.Row="0" Grid.Column="0" Margin="4"
                 ItemsSource="{Binding Desktop, Converter={StaticResource convYield}}"
                 ItemTemplate="{StaticResource tplShellItemTreeSmall}" ItemContainerStyle="{StaticResource stytviShellItem}"
-                VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsVirtualizing="True"/>
+                VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsVirtualizing="True"
+                SelectedItemChanged="TvwShell_OnSelectedItemChanged"/>
         <ListView x:Name="lvwShell" Grid.Row="0" Grid.Column="1" Margin="4"
                 ItemsSource="{Binding SelectedItem.Children, ElementName=tvwShell}"
                 ItemTemplate="{StaticResource tplShellItemLarge}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VerticalContentAlignment="Top">
@@ -81,16 +81,15 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <ListBox x:Name="lstShellIcons" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
+        <!--<ListBox x:Name="lstShellIcons" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
                 ItemsSource="{Binding ShellIcons}"
                 VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
-                    <!--<VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>-->
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-        </ListBox>
+        </ListBox>-->
 
     </Grid>
 </Window>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
@@ -14,6 +16,7 @@ using Alba.Interop;
 using Alba.Interop.ShellApi;
 using Alba.Interop.ShellObjects;
 
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace Alba.Windows.Shell
 {
     public class ShellItem : ModelBase<ShellItem>, IDisposable
@@ -47,6 +50,8 @@ namespace Alba.Windows.Shell
             _shellFolder = shellFolder;
             _children = _childrenFiles = _childrenFolders = DummyChildren;
             UpdateAttrs(SFGAO.HASSUBFOLDER | SFGAO.FILESYSTEM | SFGAO.FILESYSANCESTOR | SFGAO.FOLDER);
+            if (!HasSubFolder)
+                _childrenFolders = NoChildren;
         }
 
         public ShellTree Tree
@@ -229,26 +234,30 @@ namespace Alba.Windows.Shell
         private void ReplaceDummyChildren ()
         {
             if (_children == DummyChildren) {
-                _children = new ObservableCollectionEx<ShellItem>();
-                _childrenFiles = new ObservableCollectionEx<ShellItem>();
-                _childrenFolders = new ObservableCollectionEx<ShellItem>();
+                var children = new List<ShellItem>();
                 try {
                     foreach (PIDLIST childPidl in _shellFolder.EnumObjects(_tree.WindowHandle, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
                         NativeShellFolder childShellFolder = _shellFolder.BindToObject<IShellFolder>(childPidl).ToNative();
                         ShellItem childItem = new ShellItem(_tree, this, childPidl, childShellFolder);
-                        if (!childItem.HasSubFolder)
-                            childItem._childrenFolders = NoChildren;
-
+                        children.Add(childItem);
+                    }
+                }
+                catch (Exception e) {
+                    if (e.IsAnyType<FileNotFoundException, Win32Exception>())
+                        Log.Error("Failed to enumerate items of folder '{0}'.".Fmt(DisplayName), e);
+                }
+                finally {
+                    children.Sort(new ShellItemComparer(ParentShellFolder));
+                    _children = new ObservableCollectionEx<ShellItem>();
+                    _childrenFiles = new ObservableCollectionEx<ShellItem>();
+                    _childrenFolders = new ObservableCollectionEx<ShellItem>();
+                    foreach (ShellItem childItem in children) {
                         _children.Add(childItem);
                         if (childItem.IsFolder)
                             _childrenFolders.Add(childItem);
                         else
                             _childrenFiles.Add(childItem);
                     }
-                }
-                catch (Exception e) {
-                    if (e.IsAnyType<FileNotFoundException, Win32Exception>())
-                        Log.Error("Failed to enumerate items of folder '{0}'.".Fmt(DisplayName), e);
                 }
                 OnPropertyChanged("Children", "ChildrenUnexpanded",
                     "ChildrenFiles", "ChildrenFilesUnexpanded",
@@ -306,6 +315,49 @@ namespace Alba.Windows.Shell
         public void Dispose ()
         {
             _pidl.Dispose();
+        }
+
+        private class ShellItemComparer : IComparer<ShellItem>
+        {
+            private readonly NativeShellFolder _shellFolder;
+
+            public ShellItemComparer (NativeShellFolder shellFolder)
+            {
+                _shellFolder = shellFolder;
+            }
+
+            public int Compare (ShellItem x, ShellItem y)
+            {
+                int cmp = -CompareBool(x.IsFileSystemAncestor && !x.IsFileSystem, y.IsFileSystemAncestor && !y.IsFileSystem);
+                if (cmp != 0)
+                    return cmp;
+                cmp = -CompareBool(x.IsFileSystem, y.IsFileSystem);
+                if (cmp != 0)
+                    return cmp;
+                cmp = -CompareBool(x.IsFileSystemAncestor, y.IsFileSystemAncestor);
+                if (cmp != 0)
+                    return cmp;
+                cmp = -CompareBool(x.IsFolder, y.IsFolder);
+                if (cmp != 0)
+                    return cmp;
+                /*try {
+                    cmp = _shellFolder.CompareIDs(x._pidl, y._pidl);
+                    if (cmp != 0)
+                        return cmp;
+                }
+                catch {}*/
+                return string.Compare(x.DisplayName, y.DisplayName, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase);
+            }
+
+            private static int CompareBool (bool x, bool y)
+            {
+                if (x == y)
+                    return 0;
+                else if (x)
+                    return 1;
+                else
+                    return -1;
+            }
         }
 
         [Flags]

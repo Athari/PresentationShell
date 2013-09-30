@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Alba.Interop;
 using Alba.Interop.ShellApi;
 using Alba.Interop.ShellObjects;
@@ -22,8 +24,9 @@ namespace Alba.PresentationShell.Sample
         {
             ShellIcons = new ObservableCollection<ImageSource>();
             Desktop = new ShellTree().Desktop;
-            Desktop.IsSelected = true;
             Desktop.IsExpanded = true;
+            Desktop.ChildrenFolders[0].IsExpanded = true;
+            Desktop.ChildrenFolders[0].IsSelected = true;
 
             Icon = Desktop.IconLarge;
 
@@ -105,6 +108,12 @@ namespace Alba.PresentationShell.Sample
 
             //var jumboImageList = NativeImageList.GetShellImageList(SHIL.JUMBO);
             //JumboIcons.AddRange(Enumerable.Range(0, jumboImageList.ImageCount).Select(jumboImageList.GetIconImageSource));
+        }
+
+        private void TvwShell_OnSelectedItemChanged (object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            Cursor = Cursors.Wait;
+            Dispatcher.InvokeAsync(() => { Cursor = Cursors.Arrow; }, DispatcherPriority.ContextIdle);
         }
     }
 
