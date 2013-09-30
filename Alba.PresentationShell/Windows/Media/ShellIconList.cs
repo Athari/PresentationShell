@@ -51,16 +51,24 @@ namespace Alba.Windows.Media
             }
         }
 
+        public int GetIconIndex (NativeShellIcon shellIcon, PIDLIST pidl, GILI iconFlags)
+        {
+            return shellIcon.GetIconOf(pidl, iconFlags);
+        }
+
         public ImageSource GetIcon (NativeShellIcon shellIcon, PIDLIST pidl, SHIL iconSize, GILI iconFlags)
         {
-            int index = shellIcon.GetIconOf(pidl, iconFlags);
-            return GetIconByIndex(iconSize, index);
+            return GetIconByIndex(iconSize, GetIconIndex(shellIcon, pidl, iconFlags));
+        }
+
+        public int GetIconOverlayIndex (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl)
+        {
+            return shellIconOverlay.GetOverlayIconIndex(pidl);
         }
 
         public ImageSource GetIconOverlay (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl, SHIL iconSize)
         {
-            int index = shellIconOverlay.GetOverlayIconIndex(pidl);
-            return GetIconByIndex(iconSize, index);
+            return GetIconByIndex(iconSize, GetIconOverlayIndex(shellIconOverlay, pidl));
         }
 
         public ImageSource GetIconByIndex (SHIL iconSize, int index)

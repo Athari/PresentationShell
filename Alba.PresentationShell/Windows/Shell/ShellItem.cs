@@ -18,6 +18,11 @@ namespace Alba.Windows.Shell
 {
     public class ShellItem : ModelBase<ShellItem>, IDisposable
     {
+        internal const int NoIconIndex = -1;
+        internal const int AsyncIconIndex = -2;
+        internal const int UndefinedIconIndex = -3;
+        internal const int UnindexableIconIndex = -3;
+
         private static readonly ILog Log = GetLog(AlbaPresentaionShellTraceSources.Interop);
         internal static readonly ObservableCollectionEx<ShellItem> DummyChildren = new ObservableCollectionEx<ShellItem> { new ShellItem() };
         internal static readonly ObservableCollectionEx<ShellItem> NoChildren = new ObservableCollectionEx<ShellItem>();
@@ -29,6 +34,7 @@ namespace Alba.Windows.Shell
         private ObservableCollectionEx<ShellItem> _children;
         private SFGAO _attrs, _attrsSet;
         private ShellItemState _state;
+        private int _iconIndex = UndefinedIconIndex, _iconOverlayIndex = UndefinedIconIndex;
 
         private ShellItem ()
         {}
@@ -196,23 +202,48 @@ namespace Alba.Windows.Shell
 
         private ImageSource GetIconOverlay (SHIL iconSize)
         {
+            return _tree.IconList.GetIconByIndex(iconSize, GetIconOverlayIndex());
+        }
+
+        private int GetIconOverlayIndex ()
+        {
+            if (_iconOverlayIndex != UndefinedIconIndex)
+                return _iconOverlayIndex;
+
             if (IsDesktop)
-                return null;
-            using (NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative())
-                return shellIconOverlay != null ? _tree.IconList.GetIconOverlay(shellIconOverlay, _pidl, iconSize) : null;
+                return _iconOverlayIndex = NoIconIndex;
+            else {
+                using (NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative())
+                    if (shellIconOverlay != null)
+                        return _iconOverlayIndex = _tree.IconList.GetIconOverlayIndex(shellIconOverlay, _pidl);
+                    else
+                        return _iconOverlayIndex = NoIconIndex;
+            }
         }
 
         private ImageSource GetIcon (SHIL iconSize, GILI iconAttrs)
         {
+            int iconIndex = GetIconIndex(iconAttrs);
+            return iconIndex != UnindexableIconIndex
+                ? _tree.IconList.GetIconByIndex(iconSize, iconIndex)
+                : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
+        }
+
+        private int GetIconIndex (GILI iconAttrs)
+        {
+            if (_iconIndex != UndefinedIconIndex)
+                return _iconIndex;
+
             if (IsDesktop) {
-                using (PIDLIST desktoPidl = Native.SHGetKnownFolderIDList(FOLDERID.Desktop))
-                    return _tree.IconList.GetIconByIndex(iconSize, Native.SHGetFileInfo(desktoPidl, SHGFI.SYSICONINDEX).iIcon);
+                using (PIDLIST desktopPidl = Native.SHGetKnownFolderIDList(FOLDERID.Desktop))
+                    return _iconIndex = Native.SHGetFileInfo(desktopPidl, SHGFI.SYSICONINDEX).iIcon;
             }
             else {
                 using (NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative())
-                    return shellIcon != null
-                        ? _tree.IconList.GetIcon(shellIcon, _pidl, iconSize, iconAttrs)
-                        : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
+                    if (shellIcon != null)
+                        return _iconIndex = _tree.IconList.GetIconIndex(shellIcon, _pidl, iconAttrs);
+                    else
+                        return _iconIndex = UnindexableIconIndex;
             }
         }
 

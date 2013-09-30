@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Alba.Interop.WinError;
+using Alba.Windows.Shell;
 
 namespace Alba.Interop.ShellObjects
 {
@@ -13,7 +14,7 @@ namespace Alba.Interop.ShellObjects
             int iconIndex;
             HRESULT hr = Com.GetIconOf(pidl, flags, out iconIndex);
             if (hr == HRESULT.S_FALSE)
-                return -1;
+                return ShellItem.NoIconIndex;
             hr.ThrowIfFailed();
             return iconIndex;
         }
