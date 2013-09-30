@@ -157,6 +157,15 @@ namespace Alba.Windows.Shell
 
         public ObservableCollection<ShellItem> Children
         {
+            get
+            {
+                ReplaceDummyChildren();
+                return _children;
+            }
+        }
+
+        public ObservableCollection<ShellItem> ChildrenUnexpanded
+        {
             get { return _children; }
         }
 
@@ -196,7 +205,7 @@ namespace Alba.Windows.Shell
                     if (e.IsAnyType<FileNotFoundException, Win32Exception>())
                         Log.Error("Failed to enumerate items of folder '{0}'.".Fmt(DisplayName), e);
                 }
-                OnPropertyChanged("Children");
+                OnPropertyChanged("Children", "ChildrenUnexpanded");
             }
         }
 
