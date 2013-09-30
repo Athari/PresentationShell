@@ -99,6 +99,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Alba.Framework\Alba.Framework.Presentation\Alba.Framework.Presentation.csproj">
+      <Project>{B72BF9AF-94B9-4526-9BEA-C08636DF7E06}</Project>
+      <Name>Alba.Framework.Presentation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Alba.Framework\Alba.Framework\Alba.Framework.csproj">
       <Project>{62730B23-450C-4B93-8D5C-F7037DB6D263}</Project>
       <Name>Alba.Framework</Name>

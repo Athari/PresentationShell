@@ -7,7 +7,21 @@ namespace Alba.Interop.ShellObjects
     [StructLayout (LayoutKind.Sequential)]
     internal struct PIDLIST : IDisposable
     {
+        private static readonly PIDLIST _empty;
+
         private readonly IntPtr _handle;
+
+        static PIDLIST ()
+        {
+            IntPtr ptrEmpty = Marshal.AllocCoTaskMem(4);
+            Marshal.WriteInt32(ptrEmpty, 0);
+            _empty = new PIDLIST(ptrEmpty);
+        }
+
+        public static PIDLIST Empty
+        {
+            get { return _empty; }
+        }
 
         public IntPtr Handle
         {

@@ -1,21 +1,56 @@
 ﻿<Window x:Class="Alba.PresentationShell.Sample.MainWindow" x:Name="self"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+        xmlns:a="urn:alba:framework"
+        xmlns:shell="clr-namespace:Alba.Windows.Shell;assembly=Alba.PresentationShell"
         Title="Alba.PresentationShell.Sample" Height="900" Width="600"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        FocusManager.FocusedElement="{Binding ElementName=tvwShell}"
         DataContext="{Binding ElementName=self}">
     <Control.Resources>
+
+        <a:YieldConverter x:Key="convYield"/>
+
         <DataTemplate DataType="{x:Type ImageSource}">
             <Image Source="{Binding}" Stretch="None" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </DataTemplate>
+
+        <HierarchicalDataTemplate DataType="{x:Type shell:ShellItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Grid MinWidth="16" MinHeight="16" Margin="1">
+                    <Image Source="{Binding IconSmall}" Stretch="None" VerticalAlignment="Center"/>
+                    <Image Source="{Binding IconOverlaySmall}" Stretch="None" VerticalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding DisplayName}" Margin="3 1" VerticalAlignment="Center"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <Style x:Key="stytviShellItem" TargetType="TreeViewItem" d:DataContext="{d:DesignInstance shell:ShellItem}">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+        </Style>
+
     </Control.Resources>
-    <!--<ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel"/>-->
-    <ListBox ItemsSource="{Binding JumboIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-        <ListBox.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
-                <!--<VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>-->
-            </ItemsPanelTemplate>
-        </ListBox.ItemsPanel>
-    </ListBox>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TreeView x:Name="tvwShell" Grid.Row="0" ItemsSource="{Binding Desktop, Converter={StaticResource convYield}}"
+                ItemContainerStyle="{StaticResource stytviShellItem}" VirtualizingPanel.ScrollUnit="Pixel"/>
+
+        <ListBox x:Name="lstShellIcons" Grid.Row="1" ItemsSource="{Binding ShellIcons}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                    <!--<VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>-->
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+
+    </Grid>
 </Window>

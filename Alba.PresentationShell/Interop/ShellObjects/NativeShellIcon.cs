@@ -7,10 +7,12 @@ namespace Alba.Interop.ShellObjects
     internal class NativeShellIcon : IDisposable
     {
         private IShellIcon _shellIcon;
+        private readonly bool _own;
 
-        public NativeShellIcon (IShellIcon shellIcon)
+        public NativeShellIcon (IShellIcon shellIcon, bool own = true)
         {
             _shellIcon = shellIcon;
+            _own = own;
         }
 
         public int GetIconOf ([In] PIDLIST pidl, [In] GILI flags)
@@ -38,7 +40,8 @@ namespace Alba.Interop.ShellObjects
         {
             if (_shellIcon == null)
                 return;
-            Marshal.ReleaseComObject(_shellIcon);
+            if (_own)
+                Marshal.ReleaseComObject(_shellIcon);
             _shellIcon = null;
         }
     }

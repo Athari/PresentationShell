@@ -1,60 +1,29 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Alba.Interop.WinError;
+﻿using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
-    internal class NativeShellIconOverlay : IDisposable
+    internal class NativeShellIconOverlay : NativeComInterface<IShellIconOverlay>
     {
         public const int NoOverlay = -1;
         public const int AsyncOverlay = -2;
 
-        private IShellIconOverlay _shellIconOverlay;
-
-        public NativeShellIconOverlay (IShellIconOverlay shellIconOverlay)
-        {
-            _shellIconOverlay = shellIconOverlay;
-        }
+        public NativeShellIconOverlay (IShellIconOverlay com, bool own = true) : base(com, own)
+        {}
 
         public int GetOverlayIndex (PIDLIST pidl, bool allowAsync = false)
         {
             int overlayIndex = allowAsync ? OI.ASYNC : 0;
-            HRESULT hr = _shellIconOverlay.GetOverlayIndex(pidl, ref overlayIndex);
-            if (hr == HRESULT.S_FALSE)
-                return NoOverlay;
+            HRESULT hr = Com.GetOverlayIndex(pidl, ref overlayIndex);
             if (hr == HRESULT.E_PENDING)
                 return AsyncOverlay;
-            hr.ThrowIfFailed();
-            return overlayIndex;
+            return LogIfFailed(hr) ? overlayIndex : NoOverlay;
         }
 
         public int GetOverlayIconIndex (PIDLIST pidl)
         {
             int overlayIndex = 0;
-            HRESULT hr = _shellIconOverlay.GetOverlayIconIndex(pidl, ref overlayIndex);
-            if (hr == HRESULT.S_FALSE)
-                return NoOverlay;
-            hr.ThrowIfFailed();
-            return overlayIndex;
-        }
-
-        ~NativeShellIconOverlay ()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose ()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected void Dispose (bool disposing)
-        {
-            if (_shellIconOverlay == null)
-                return;
-            Marshal.ReleaseComObject(_shellIconOverlay);
-            _shellIconOverlay = null;
+            HRESULT hr = Com.GetOverlayIconIndex(pidl, ref overlayIndex);
+            return LogIfFailed(hr) ? overlayIndex : NoOverlay;
         }
     }
 }

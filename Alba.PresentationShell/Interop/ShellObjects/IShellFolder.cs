@@ -41,7 +41,8 @@ namespace Alba.Interop.ShellObjects
         /// <param name="pbc">A pointer to an IBindCtx interface on a bind context object that can be used to pass parameters to the construction of the handler.</param>
         /// <param name="riid">The identifier of the interface to return. This may be IID_IShellFolder, IID_IStream, or any other interface that identifies a particular handler.</param>
         /// <param name="ppv">When this method returns, contains the address of a pointer to the requested interface. If an error occurs, a NULL pointer is returned at this address.</param>
-        void BindToObject ([In] PIDLIST pidl, [In] IBindCtx pbc, [In, MarshalAs (UnmanagedType.LPStruct)] Guid riid,
+        [PreserveSig]
+        HRESULT BindToObject ([In] PIDLIST pidl, [In] IBindCtx pbc, [In, MarshalAs (UnmanagedType.LPStruct)] Guid riid,
             [Out, MarshalAs (UnmanagedType.IUnknown)] out object ppv);
         /// <summary>Requests a pointer to an object's storage interface.</summary>
         /// <param name="pidl">(PCUIDLIST_RELATIVE) The address of an ITEMIDLIST structure that identifies the subfolder relative to its parent folder. The structure must contain exactly one SHITEMID structure followed by a terminating zero.</param>

@@ -25,14 +25,14 @@ namespace Alba.Interop
             return @this != null ? new NativeShellFolder(@this) : null;
         }
 
-        public static NativeShellIcon ToNative (this IShellIcon @this)
+        public static NativeShellIcon ToNative (this IShellIcon @this, bool own = true)
         {
-            return @this != null ? new NativeShellIcon(@this) : null;
+            return @this != null ? new NativeShellIcon(@this, own) : null;
         }
 
-        public static NativeShellIconOverlay ToNative (this IShellIconOverlay @this)
+        public static NativeShellIconOverlay ToNative (this IShellIconOverlay @this, bool own = true)
         {
-            return @this != null ? new NativeShellIconOverlay(@this) : null;
+            return @this != null ? new NativeShellIconOverlay(@this, own) : null;
         }
     }
 }

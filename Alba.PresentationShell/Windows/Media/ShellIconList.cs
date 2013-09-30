@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Media;
 using Alba.Framework.Collections;
 using Alba.Framework.Sys;
@@ -25,7 +24,12 @@ namespace Alba.Windows.Media
             return _imageLists.GetOrAdd(iconSize, () => new ShellImageList(iconSize));
         }
 
-        public ImageSource ExtractIcon (NativeShellFolder shellFolder, PIDLIST pidl, int iconSize, GILI iconFlags)
+        public ImageSource ExtractIcon (NativeShellFolder shellFolder, PIDLIST pidl, SHIL iconSize, GILI iconFlags)
+        {
+            return ExtractIcon(shellFolder, pidl, IconSizeToPixels(iconSize), iconFlags);
+        }
+
+        private ImageSource ExtractIcon (NativeShellFolder shellFolder, PIDLIST pidl, int iconSize, GILI iconFlags)
         {
             using (NativeExtractIcon extractIcon = shellFolder.GetUIObjectOf<IExtractIcon>(pidl).ToNative()) {
                 string iconFile;
@@ -55,18 +59,25 @@ namespace Alba.Windows.Media
 
         public ImageSource GetShellIconOverlay (NativeShellIconOverlay shellIconOverlay, PIDLIST pidl, SHIL iconSize)
         {
-            try {
-                int index = shellIconOverlay.GetOverlayIconIndex(pidl);
-                return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
-            }
-            catch (COMException) { // TODO Log error
-                return null;
-            }
-            catch (ArgumentException) {
-                return null;
-            }
-            catch (InvalidCastException) {
-                return null;
+            int index = shellIconOverlay.GetOverlayIconIndex(pidl);
+            return index >= 0 ? GetImageList(iconSize).GetIconImageSource(index) : null;
+        }
+
+        private static int IconSizeToPixels (SHIL iconSize)
+        {
+            // TODO Properly calculate icon size using GetSystemMetrics
+            switch (iconSize) {
+                case SHIL.SMALL:
+                case SHIL.SYSSMALL:
+                    return 16;
+                case SHIL.LARGE:
+                    return 32;
+                case SHIL.EXTRALARGE:
+                    return 48;
+                case SHIL.JUMBO:
+                    return 256;
+                default:
+                    throw new ArgumentOutOfRangeException("iconSize");
             }
         }
 
@@ -102,8 +113,9 @@ namespace Alba.Windows.Media
 
             public ImageSource GetIconImageSource (int index)
             {
-                return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
-                //return Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index));
+                // TODO !!! Cache icon image sources
+                //return _imageSourceCache.GetOrAdd(index, () => Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index)));
+                return Native.CreateBitmapSourceFromHIcon(_imageList.GetIcon(index));
             }
         }
 

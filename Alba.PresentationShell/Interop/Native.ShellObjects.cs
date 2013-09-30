@@ -102,6 +102,16 @@ namespace Alba.Interop
         [DllImport (Dll.Shell, PreserveSig = false)]
         private static extern void SHGetDesktopFolder ([Out] out IShellFolder ppshf);
 
+        /// <summary>Retrieves the path of a known folder as an ITEMIDLIST structure.</summary>
+        /// <param name="rfid">A reference to the KNOWNFOLDERID that identifies the folder. The folders associated with the known folder IDs might not exist on a particular system.</param>
+        /// <param name="dwFlags">Flags that specify special retrieval options. This value can be 0; otherwise, it is one or more of the KNOWN_FOLDER_FLAG values.</param>
+        /// <param name="hToken">An access token used to represent a particular user. This parameter is usually set to NULL, in which case the function tries to access the current user's instance of the folder. However, you may need to assign a value to hToken for those folders that can have multiple users but are treated as belonging to a single user. The most commonly used folder of this type is Documents.<br/>
+        /// The calling application is responsible for correct impersonation when hToken is non-null. It must have appropriate security privileges for the particular user, including TOKEN_QUERY and TOKEN_IMPERSONATE, and the user's registry hive must be currently mounted. See Access Control for further discussion of access control issues.<br/>
+        /// Assigning the hToken parameter a value of -1 indicates the Default User. This allows clients of SHGetKnownFolderIDList to find folder locations (such as the Desktop folder) for the Default User. The Default User user profile is duplicated when any new user account is created, and includes special folders such as Documents and Desktop. Any items added to the Default User folder also appear in any new user account. Note that access to the Default User folders requires administrator privileges.</param>
+        /// <param name="ppidl">When this method returns, contains a pointer to the PIDL of the folder. This parameter is passed uninitialized. The caller is responsible for freeing the returned PIDL when it is no longer needed by calling ILFree.</param>
+        [DllImport (Dll.Shell, PreserveSig = false)]
+        private static extern void SHGetKnownFolderIDList ([In, MarshalAs (UnmanagedType.LPStruct)] Guid rfid, [In] KF_FLAG dwFlags, [In] IntPtr hToken, [Out] out PIDLIST ppidl);
+
         /// <summary>Clones a full, or absolute, ITEMIDLIST structure.</summary>
         /// <param name="pidl">(PCUIDLIST_ABSOLUTE) A pointer to the full, or absolute, ITEMIDLIST structure to be cloned.</param>
         /// <returns>(PCUIDLIST_ABSOLUTE) A pointer to a copy of the ITEMIDLIST structure pointed to by pidl.</returns>
@@ -158,6 +168,13 @@ namespace Alba.Interop
             IShellFolder ppshf;
             SHGetDesktopFolder(out ppshf);
             return ppshf;
+        }
+
+        internal static PIDLIST SHGetKnownFolderIDList (Guid rfid, KF_FLAG dwFlags = 0)
+        {
+            PIDLIST ppidl;
+            SHGetKnownFolderIDList(rfid, dwFlags, IntPtr.Zero, out ppidl);
+            return ppidl;
         }
     }
 }

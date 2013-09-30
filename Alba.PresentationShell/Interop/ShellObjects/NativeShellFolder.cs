@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Alba.Interop.ShellTypes;
 using Alba.Interop.WinError;
 
@@ -8,14 +7,10 @@ namespace Alba.Interop.ShellObjects
 {
     using HWND = IntPtr;
 
-    internal class NativeShellFolder : IDisposable
+    internal class NativeShellFolder : NativeComInterface<IShellFolder>
     {
-        private IShellFolder _shellFolder;
-
-        public NativeShellFolder (IShellFolder shellFolder)
-        {
-            _shellFolder = shellFolder;
-        }
+        public NativeShellFolder (IShellFolder com, bool own = true) : base(com, own)
+        {}
 
         public static NativeShellFolder GetDesktopFolder ()
         {
@@ -24,13 +19,13 @@ namespace Alba.Interop.ShellObjects
 
         public T QueryInterface<T> () where T : class
         {
-            return _shellFolder as T;
+            return Com as T;
         }
 
         public PIDLIST ParseDisplayName (string displayName, ref uint pchEaten, ref SFGAO attrs, HWND hwnd)
         {
             PIDLIST pidl;
-            _shellFolder.ParseDisplayName(hwnd, null, displayName, ref pchEaten, out pidl, ref attrs);
+            Com.ParseDisplayName(hwnd, null, displayName, ref pchEaten, out pidl, ref attrs);
             return pidl;
         }
 
@@ -49,7 +44,7 @@ namespace Alba.Interop.ShellObjects
         public IEnumerable<PIDLIST> EnumObjects (HWND hwnd, SHCONTF flags)
         {
             IEnumIDList enumIdList;
-            HRESULT hr = _shellFolder.EnumObjects(hwnd, flags, out enumIdList);
+            HRESULT hr = Com.EnumObjects(hwnd, flags, out enumIdList);
             if (hr == HRESULT.S_FALSE)
                 yield break;
             hr.ThrowIfFailed();
@@ -60,23 +55,23 @@ namespace Alba.Interop.ShellObjects
                     yield return enumerator.Current;
         }
 
-        public T BindToObject<T> (PIDLIST pidl)
+        public T BindToObject<T> (PIDLIST pidl) where T : class
         {
             object obj;
-            _shellFolder.BindToObject(pidl, null, typeof(T).GUID, out obj);
-            return (T)obj;
+            HRESULT hr = Com.BindToObject(pidl, null, typeof(T).GUID, out obj);
+            return hr.IsSucceeded ? (T)obj : null;
         }
 
         public T BindToStorage<T> (PIDLIST pidl)
         {
             object obj;
-            _shellFolder.BindToStorage(pidl, null, typeof(T).GUID, out obj);
+            Com.BindToStorage(pidl, null, typeof(T).GUID, out obj);
             return (T)obj;
         }
 
         public int CompareIDs (PIDLIST pidl1, PIDLIST pidl2, int lParam = 0)
         {
-            HRESULT hr = _shellFolder.CompareIDs(lParam, pidl1, pidl2);
+            HRESULT hr = Com.CompareIDs(lParam, pidl1, pidl2);
             hr.ThrowIfFailed();
             return hr.Code;
         }
@@ -84,13 +79,13 @@ namespace Alba.Interop.ShellObjects
         public T CreateViewObject<T> (HWND hwndOwner)
         {
             object obj;
-            _shellFolder.CreateViewObject(hwndOwner, typeof(T).GUID, out obj);
+            Com.CreateViewObject(hwndOwner, typeof(T).GUID, out obj);
             return (T)obj;
         }
 
         public SFGAO GetAttributesOf (PIDLIST[] pidls, SFGAO attrs)
         {
-            _shellFolder.GetAttributesOf(pidls.Length, pidls, ref attrs);
+            Com.GetAttributesOf(pidls.Length, pidls, ref attrs);
             return attrs;
         }
 
@@ -103,7 +98,7 @@ namespace Alba.Interop.ShellObjects
         {
             uint reserved = 0;
             object obj;
-            _shellFolder.GetUIObjectOf(hwnd, pidls.Length, pidls, typeof(T).GUID, ref reserved, out obj);
+            Com.GetUIObjectOf(hwnd, pidls.Length, pidls, typeof(T).GUID, ref reserved, out obj);
             return (T)obj;
         }
 
@@ -125,34 +120,15 @@ namespace Alba.Interop.ShellObjects
         public string GetDisplayNameOf (PIDLIST pidl, SHGDN uFlags)
         {
             STRRET name;
-            _shellFolder.GetDisplayNameOf(pidl, uFlags, out name);
+            Com.GetDisplayNameOf(pidl, uFlags, out name);
             return Native.StrRetToBuf(ref name, pidl);
         }
 
         public PIDLIST SetNameOf (HWND hwnd, PIDLIST pidl, string displayName, SHGDN flags)
         {
             PIDLIST pidlOut;
-            _shellFolder.SetNameOf(hwnd, pidl, displayName, flags, out pidlOut);
+            Com.SetNameOf(hwnd, pidl, displayName, flags, out pidlOut);
             return pidlOut;
-        }
-
-        ~NativeShellFolder ()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose ()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected void Dispose (bool disposing)
-        {
-            if (_shellFolder == null)
-                return;
-            Marshal.ReleaseComObject(_shellFolder);
-            _shellFolder = null;
         }
     }
 }
