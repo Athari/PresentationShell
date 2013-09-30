@@ -9,7 +9,7 @@ namespace Alba.Interop.ShellObjects
     {
         private static readonly PIDLIST _empty;
 
-        private readonly IntPtr _handle;
+        private IntPtr _handle;
 
         static PIDLIST ()
         {
@@ -45,7 +45,10 @@ namespace Alba.Interop.ShellObjects
 
         public void Dispose ()
         {
-            Marshal.FreeCoTaskMem(Handle);
+            if (_handle == IntPtr.Zero)
+                return;
+            Marshal.FreeCoTaskMem(_handle);
+            _handle = IntPtr.Zero;
         }
 
         public override string ToString ()

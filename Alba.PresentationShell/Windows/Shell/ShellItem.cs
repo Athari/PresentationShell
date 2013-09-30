@@ -31,7 +31,7 @@ namespace Alba.Windows.Shell
         private ShellItem _parent;
         private PIDLIST _pidl;
         private NativeShellFolder _shellFolder;
-        private ObservableCollectionEx<ShellItem> _children;
+        private ObservableCollectionEx<ShellItem> _children, _childrenFiles, _childrenFolders;
         private SFGAO _attrs, _attrsSet;
         private ShellItemState _state;
         private int _iconIndex = UndefinedIconIndex, _iconOverlayIndex = UndefinedIconIndex;
@@ -45,8 +45,8 @@ namespace Alba.Windows.Shell
             _parent = parent;
             _pidl = pidl;
             _shellFolder = shellFolder;
-            _children = DummyChildren;
-            UpdateAttrs(SFGAO.HASSUBFOLDER);
+            _children = _childrenFiles = _childrenFolders = DummyChildren;
+            UpdateAttrs(SFGAO.HASSUBFOLDER | SFGAO.FILESYSTEM | SFGAO.FILESYSANCESTOR | SFGAO.FOLDER);
         }
 
         public ShellTree Tree
@@ -64,9 +64,19 @@ namespace Alba.Windows.Shell
             get { return _pidl.IsEmpty; }
         }
 
-        public bool HasSubFolders
+        public bool HasSubFolder
         {
             get { return GetAttr(SFGAO.HASSUBFOLDER); }
+        }
+
+        public bool IsFileSystem
+        {
+            get { return GetAttr(SFGAO.FILESYSTEM); }
+        }
+
+        public bool IsFileSystemAncestor
+        {
+            get { return GetAttr(SFGAO.FILESYSANCESTOR); }
         }
 
         public bool IsFolder
@@ -169,6 +179,34 @@ namespace Alba.Windows.Shell
             get { return _children; }
         }
 
+        public ObservableCollection<ShellItem> ChildrenFiles
+        {
+            get
+            {
+                ReplaceDummyChildren();
+                return _childrenFiles;
+            }
+        }
+
+        public ObservableCollection<ShellItem> ChildrenFilesUnexpanded
+        {
+            get { return _childrenFiles; }
+        }
+
+        public ObservableCollection<ShellItem> ChildrenFolders
+        {
+            get
+            {
+                ReplaceDummyChildren();
+                return _childrenFolders;
+            }
+        }
+
+        public ObservableCollection<ShellItem> ChildrenFoldersUnexpanded
+        {
+            get { return _childrenFolders; }
+        }
+
         private bool GetAttr (SFGAO attr)
         {
             if (!_attrsSet.Has(attr))
@@ -192,20 +230,29 @@ namespace Alba.Windows.Shell
         {
             if (_children == DummyChildren) {
                 _children = new ObservableCollectionEx<ShellItem>();
+                _childrenFiles = new ObservableCollectionEx<ShellItem>();
+                _childrenFolders = new ObservableCollectionEx<ShellItem>();
                 try {
                     foreach (PIDLIST childPidl in _shellFolder.EnumObjects(_tree.WindowHandle, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS)) {
                         NativeShellFolder childShellFolder = _shellFolder.BindToObject<IShellFolder>(childPidl).ToNative();
                         ShellItem childItem = new ShellItem(_tree, this, childPidl, childShellFolder);
-                        if (!childItem.HasSubFolders)
-                            childItem._children = NoChildren;
+                        if (!childItem.HasSubFolder)
+                            childItem._childrenFolders = NoChildren;
+
                         _children.Add(childItem);
+                        if (childItem.IsFolder)
+                            _childrenFolders.Add(childItem);
+                        else
+                            _childrenFiles.Add(childItem);
                     }
                 }
                 catch (Exception e) {
                     if (e.IsAnyType<FileNotFoundException, Win32Exception>())
                         Log.Error("Failed to enumerate items of folder '{0}'.".Fmt(DisplayName), e);
                 }
-                OnPropertyChanged("Children", "ChildrenUnexpanded");
+                OnPropertyChanged("Children", "ChildrenUnexpanded",
+                    "ChildrenFiles", "ChildrenFilesUnexpanded",
+                    "ChildrenFolders", "ChildrenFoldersUnexpanded");
             }
         }
 
