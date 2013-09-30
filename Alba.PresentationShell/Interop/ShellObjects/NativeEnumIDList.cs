@@ -9,7 +9,7 @@ namespace Alba.Interop.ShellObjects
     {
         private PIDLIST _currentPidl;
 
-        public NativeEnumIDList (IEnumIDList com, bool own = true) : base(com, own)
+        public NativeEnumIDList (IEnumIDList com) : base(com)
         {}
 
         public bool MoveNext ()

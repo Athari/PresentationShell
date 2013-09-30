@@ -198,8 +198,8 @@ namespace Alba.Windows.Shell
         {
             if (IsDesktop)
                 return null;
-            NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative(false);
-            return shellIconOverlay != null ? _tree.IconList.GetIconOverlay(shellIconOverlay, _pidl, iconSize) : null;
+            using (NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative())
+                return shellIconOverlay != null ? _tree.IconList.GetIconOverlay(shellIconOverlay, _pidl, iconSize) : null;
         }
 
         private ImageSource GetIcon (SHIL iconSize, GILI iconAttrs)
@@ -209,10 +209,10 @@ namespace Alba.Windows.Shell
                     return _tree.IconList.GetIconByIndex(iconSize, Native.SHGetFileInfo(desktoPidl, SHGFI.SYSICONINDEX).iIcon);
             }
             else {
-                NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative(false);
-                return shellIcon != null
-                    ? _tree.IconList.GetIcon(shellIcon, _pidl, iconSize, iconAttrs)
-                    : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
+                using (NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative())
+                    return shellIcon != null
+                        ? _tree.IconList.GetIcon(shellIcon, _pidl, iconSize, iconAttrs)
+                        : _tree.IconList.ExtractIcon(ParentShellFolder, _pidl, iconSize, iconAttrs);
             }
         }
 

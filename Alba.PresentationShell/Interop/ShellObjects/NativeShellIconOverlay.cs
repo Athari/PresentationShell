@@ -8,7 +8,7 @@ namespace Alba.Interop.ShellObjects
         public const int NoOverlay = -1;
         public const int AsyncOverlay = -2;
 
-        public NativeShellIconOverlay (IShellIconOverlay com, bool own = true) : base(com, own)
+        public NativeShellIconOverlay (IShellIconOverlay com) : base(com)
         {}
 
         public int GetOverlayIndex (PIDLIST pidl, bool allowAsync = false)

@@ -9,17 +9,12 @@ namespace Alba.Interop.ShellObjects
 
     internal class NativeShellFolder : NativeComInterface<IShellFolder>
     {
-        public NativeShellFolder (IShellFolder com, bool own = true) : base(com, own)
+        public NativeShellFolder (IShellFolder com) : base(com)
         {}
 
         public static NativeShellFolder GetDesktopFolder ()
         {
             return new NativeShellFolder(Native.SHGetDesktopFolder());
-        }
-
-        public T QueryInterface<T> () where T : class
-        {
-            return Com as T;
         }
 
         public PIDLIST ParseDisplayName (string displayName, ref uint pchEaten, ref SFGAO attrs, HWND hwnd)

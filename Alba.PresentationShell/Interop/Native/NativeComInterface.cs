@@ -15,12 +15,18 @@ namespace Alba.Interop
         protected static readonly ILog Log = new Log<NativeComInterface<TCom>>(AlbaPresentaionShellTraceSources.Interop);
 
         protected TCom Com { get; private set; }
-        protected bool Own { get; private set; }
 
-        protected NativeComInterface (TCom com, bool own = true)
+        protected NativeComInterface (TCom com)
         {
             Com = com;
-            Own = own;
+        }
+
+        public TComOther QueryInterface<TComOther> () where TComOther : class
+        {
+            var com = Com as TComOther;
+            if (com != null)
+                RuntimeCallWrapperAddRef(com);
+            return com;
         }
 
         protected static bool LogIfFailed (HRESULT hr, [CallerMemberName] string methodName = null)
@@ -47,9 +53,13 @@ namespace Alba.Interop
         {
             if (Com == null)
                 return;
-            if (Own)
-                Marshal.ReleaseComObject(Com);
+            Marshal.ReleaseComObject(Com);
             Com = null;
+        }
+
+        private static void RuntimeCallWrapperAddRef<T> (T com) where T : class
+        {
+            Marshal.GetObjectForIUnknown(Marshal.GetIUnknownForObject(com));
         }
     }
 }

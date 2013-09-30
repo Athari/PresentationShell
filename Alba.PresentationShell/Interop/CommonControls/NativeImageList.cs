@@ -7,7 +7,7 @@ namespace Alba.Interop.CommonControls
 
     internal class NativeImageList : NativeComInterface<IImageList>
     {
-        public NativeImageList (IImageList com, bool own = true) : base(com, own)
+        public NativeImageList (IImageList com) : base(com)
         {}
 
         public int ImageCount

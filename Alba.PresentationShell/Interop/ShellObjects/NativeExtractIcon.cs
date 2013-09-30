@@ -8,7 +8,7 @@ namespace Alba.Interop.ShellObjects
 
     internal class NativeExtractIcon : NativeComInterface<IExtractIcon>
     {
-        public NativeExtractIcon (IExtractIcon com, bool own = true) : base(com, own)
+        public NativeExtractIcon (IExtractIcon com) : base(com)
         {}
 
         public bool? GetIconLocation (GILI inFlags, out string iconFile, out int iconIndex, out GILR resFlags)

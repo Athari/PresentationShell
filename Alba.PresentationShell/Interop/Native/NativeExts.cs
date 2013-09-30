@@ -5,34 +5,34 @@ namespace Alba.Interop
 {
     internal static class NativeExts
     {
-        public static NativeEnumIDList ToNative (this IEnumIDList @this, bool own = true)
+        public static NativeEnumIDList ToNative (this IEnumIDList @this)
         {
-            return @this != null ? new NativeEnumIDList(@this, own) : null;
+            return @this != null ? new NativeEnumIDList(@this) : null;
         }
 
-        public static NativeExtractIcon ToNative (this IExtractIcon @this, bool own = true)
+        public static NativeExtractIcon ToNative (this IExtractIcon @this)
         {
-            return @this != null ? new NativeExtractIcon(@this, own) : null;
+            return @this != null ? new NativeExtractIcon(@this) : null;
         }
 
-        public static NativeImageList ToNative (this IImageList @this, bool own = true)
+        public static NativeImageList ToNative (this IImageList @this)
         {
-            return @this != null ? new NativeImageList(@this, own) : null;
+            return @this != null ? new NativeImageList(@this) : null;
         }
 
-        public static NativeShellFolder ToNative (this IShellFolder @this, bool own = true)
+        public static NativeShellFolder ToNative (this IShellFolder @this)
         {
-            return @this != null ? new NativeShellFolder(@this, own) : null;
+            return @this != null ? new NativeShellFolder(@this) : null;
         }
 
-        public static NativeShellIcon ToNative (this IShellIcon @this, bool own = true)
+        public static NativeShellIcon ToNative (this IShellIcon @this)
         {
-            return @this != null ? new NativeShellIcon(@this, own) : null;
+            return @this != null ? new NativeShellIcon(@this) : null;
         }
 
-        public static NativeShellIconOverlay ToNative (this IShellIconOverlay @this, bool own = true)
+        public static NativeShellIconOverlay ToNative (this IShellIconOverlay @this)
         {
-            return @this != null ? new NativeShellIconOverlay(@this, own) : null;
+            return @this != null ? new NativeShellIconOverlay(@this) : null;
         }
     }
 }
