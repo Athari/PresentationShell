@@ -107,7 +107,7 @@ namespace Alba.Windows.Media
 
             public ShellImageList (SHIL iconSize)
             {
-                _imageList = NativeImageList.GetShellImageList(iconSize);
+                _imageList = new NativeImageList(Native.SHGetImageList(iconSize));
                 _imageSourceCache = new IndexDictionary<ImageSource>();
             }
 

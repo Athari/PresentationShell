@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using Alba.Interop.WinError;
 
@@ -7,19 +6,15 @@ namespace Alba.Interop.ShellObjects
 {
     using HICON = IntPtr;
 
-    internal class NativeExtractIcon : IDisposable
+    internal class NativeExtractIcon : NativeComInterface<IExtractIcon>
     {
-        private IExtractIcon _extractIcon;
-
-        public NativeExtractIcon (IExtractIcon extractIcon)
-        {
-            _extractIcon = extractIcon;
-        }
+        public NativeExtractIcon (IExtractIcon com, bool own = true) : base(com, own)
+        {}
 
         public bool? GetIconLocation (GILI inFlags, out string iconFile, out int iconIndex, out GILR resFlags)
         {
             var sb = new StringBuilder(Native.MAX_PATH);
-            HRESULT hr = _extractIcon.GetIconLocation(inFlags, sb, sb.Capacity, out iconIndex, out resFlags);
+            HRESULT hr = Com.GetIconLocation(inFlags, sb, sb.Capacity, out iconIndex, out resFlags);
             iconFile = sb.ToString();
             if (hr == HRESULT.S_FALSE)
                 return false;
@@ -48,31 +43,12 @@ namespace Alba.Interop.ShellObjects
         private unsafe bool Extract (string iconFile, int iconIndex, ushort iconSizeLarge, ushort iconSizeSmall,
             HICON* hiconLarge, HICON* hiconSmall)
         {
-            HRESULT hr = _extractIcon.Extract(iconFile, iconIndex, hiconLarge, hiconSmall,
+            HRESULT hr = Com.Extract(iconFile, iconIndex, hiconLarge, hiconSmall,
                 Native.MakeLong(iconSizeLarge, iconSizeSmall));
             if (hr == HRESULT.S_FALSE)
                 return false;
             hr.ThrowIfFailed();
             return true;
-        }
-
-        ~NativeExtractIcon ()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose ()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected void Dispose (bool disposing)
-        {
-            if (_extractIcon == null)
-                return;
-            Marshal.ReleaseComObject(_extractIcon);
-            _extractIcon = null;
         }
     }
 }

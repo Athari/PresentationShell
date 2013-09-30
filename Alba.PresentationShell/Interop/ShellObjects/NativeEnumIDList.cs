@@ -1,25 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Alba.Interop.WinError;
 
 namespace Alba.Interop.ShellObjects
 {
-    internal class NativeEnumIDList : IEnumerator<PIDLIST>, ICloneable
+    internal class NativeEnumIDList : NativeComInterface<IEnumIDList>, IEnumerator<PIDLIST>, ICloneable
     {
-        private IEnumIDList _enumIdList;
         private PIDLIST _currentPidl;
 
-        public NativeEnumIDList (IEnumIDList enumIdList)
-        {
-            _enumIdList = enumIdList;
-        }
+        public NativeEnumIDList (IEnumIDList com, bool own = true) : base(com, own)
+        {}
 
         public bool MoveNext ()
         {
             uint fetched;
-            HRESULT hr = _enumIdList.Next(1, out _currentPidl, out fetched);
+            HRESULT hr = Com.Next(1, out _currentPidl, out fetched);
             if (hr == HRESULT.S_FALSE)
                 return false;
             hr.ThrowIfFailed();
@@ -28,7 +24,7 @@ namespace Alba.Interop.ShellObjects
 
         public void Reset ()
         {
-            _enumIdList.Reset();
+            Com.Reset();
         }
 
         public PIDLIST Current
@@ -44,27 +40,8 @@ namespace Alba.Interop.ShellObjects
         public object Clone ()
         {
             IEnumIDList clone;
-            _enumIdList.Clone(out clone);
+            Com.Clone(out clone);
             return clone;
-        }
-
-        ~NativeEnumIDList ()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose ()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected void Dispose (bool disposing)
-        {
-            if (_enumIdList == null)
-                return;
-            Marshal.ReleaseComObject(_enumIdList);
-            _enumIdList = null;
         }
     }
 }
