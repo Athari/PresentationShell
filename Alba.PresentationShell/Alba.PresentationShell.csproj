@@ -46,6 +46,7 @@
     <Compile Include="Diagnostics\AlbaPresentaionShellTraceSources.cs" />
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
     <Compile Include="Interop\Native.CommonControls.cs" />
+    <Compile Include="Interop\Native.cs" />
     <Compile Include="Interop\Native.WinCodec.cs" />
     <Compile Include="Interop\Native.ShellLightApi.cs" />
     <Compile Include="Interop\Native.ShellObjects.cs" />
