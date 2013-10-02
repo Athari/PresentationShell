@@ -14,7 +14,7 @@ namespace Alba.Interop
     {
         protected static readonly ILog Log = new Log<NativeComInterface<TCom>>(AlbaPresentaionShellTraceSources.Interop);
 
-        protected TCom Com { get; private set; }
+        protected internal TCom Com { get; private set; }
 
         protected NativeComInterface (TCom com)
         {

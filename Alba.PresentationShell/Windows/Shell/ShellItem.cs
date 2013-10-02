@@ -312,6 +312,11 @@ namespace Alba.Windows.Shell
             }
         }
 
+        public void InvokeDefault ()
+        {
+            Native.SHInvokeDefaultCommand(_tree.WindowHandle, ParentShellFolder.Com, _pidl);
+        }
+
         public void Dispose ()
         {
             _pidl.Dispose();

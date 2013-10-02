@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Diagnostics\AlbaPresentaionShellTraceSources.cs" />
     <Compile Include="Interop\CommonControls\NativeImageList.cs" />
+    <Compile Include="Interop\Native\Native.ShellLightApi.Undoc.cs" />
     <Compile Include="Interop\Native\Native.CommonControls.cs" />
     <Compile Include="Interop\Native\Native.cs" />
     <Compile Include="Interop\Native\Native.WinCodec.cs" />
@@ -55,7 +56,7 @@
     <Compile Include="Interop\Native\Native.WinDef.cs" />
     <Compile Include="Interop\Native\Dll.cs" />
     <Compile Include="Interop\Native\Native.ShellApi.cs" />
-    <Compile Include="Interop\Native\NativeComInterface.cs" />
+    <Compile Include="Interop\Native\NativeComInterface%28TCom%29.cs" />
     <Compile Include="Interop\Native\NativeExts.cs" />
     <Compile Include="Interop\ShellApi\SHFILEINFO.cs" />
     <Compile Include="Interop\ShellApi\SHGFI.cs" />
