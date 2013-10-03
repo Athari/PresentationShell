@@ -4,7 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         xmlns:a="urn:alba:framework"
-        xmlns:shell="clr-namespace:Alba.Windows.Shell;assembly=Alba.PresentationShell"
         Title="Alba.PresentationShell.Sample" Height="500" Width="800"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         DataContext="{Binding ElementName=self}"
@@ -14,7 +13,7 @@
 
         <a:YieldConverter x:Key="convYield"/>
 
-        <HierarchicalDataTemplate x:Key="tplShellItemTreeSmall" DataType="{x:Type shell:ShellItem}" ItemsSource="{Binding ChildrenFoldersUnexpanded}">
+        <HierarchicalDataTemplate x:Key="tplShellItemTreeSmall" DataType="{x:Type a:ShellItem}" ItemsSource="{Binding ChildrenFoldersUnexpanded}">
             <StackPanel Orientation="Horizontal">
                 <Grid MinWidth="16" MinHeight="16" Margin="1">
                     <Image Source="{Binding IconSmall}" Stretch="None" VerticalAlignment="Center"/>
@@ -24,7 +23,7 @@
             </StackPanel>
         </HierarchicalDataTemplate>
 
-        <Style x:Key="stytviShellItem" TargetType="TreeViewItem" d:DataContext="{d:DesignInstance shell:ShellItem}">
+        <Style x:Key="stytviShellItem" TargetType="TreeViewItem" d:DataContext="{d:DesignInstance a:ShellItem}">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
@@ -33,7 +32,7 @@
 
         <a:WrapView x:Key="viwShellItemLarge">
             <a:WrapView.ItemTemplate>
-                <DataTemplate DataType="{x:Type shell:ShellItem}">
+                <DataTemplate DataType="{x:Type a:ShellItem}">
                     <StackPanel Orientation="Vertical" Width="80" Margin="3" UseLayoutRounding="True" MouseLeftButtonDown="ShellItem_OnMouseLeftButtonDown">
                         <Grid MinWidth="32" MinHeight="32" Margin="1" HorizontalAlignment="Center">
                             <Image Source="{Binding IconLarge}" Stretch="None" VerticalAlignment="Center"/>
@@ -47,7 +46,6 @@
         </a:WrapView>
 
     </Control.Resources>
-
     <Grid>
         <Grid a:GridProps.ForceCellSizes="True">
 
@@ -62,13 +60,11 @@
             <TreeView x:Name="tvwShell" Grid.Row="0" Grid.Column="0" Margin="4"
                     ItemsSource="{Binding Desktop, Converter={StaticResource convYield}}"
                     ItemTemplate="{StaticResource tplShellItemTreeSmall}" ItemContainerStyle="{StaticResource stytviShellItem}"
-                    VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
                     SelectedItemChanged="TvwShell_OnSelectedItemChanged"/>
 
             <ListView x:Name="lvwShell" Grid.Row="0" Grid.Column="1" Margin="4"
                     ItemsSource="{Binding SelectedItem.Children, ElementName=tvwShell}"
-                    View="{StaticResource viwShellItemLarge}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                    View="{StaticResource viwShellItemLarge}"/>
 
         </Grid>
     </Grid>

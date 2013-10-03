@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Markup;
 
 [assembly: AssemblyTitle("Alba.PresentationShell")]
 [assembly: AssemblyDescription("")]
@@ -19,3 +21,8 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: XmlnsPrefix("urn:alba:framework", "a")]
+[assembly: XmlnsDefinition("urn:alba:framework", "Alba.Windows.Shell")]
+[assembly: XmlnsDefinition("urn:alba:framework", "Alba.Windows.Media")]
+[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
