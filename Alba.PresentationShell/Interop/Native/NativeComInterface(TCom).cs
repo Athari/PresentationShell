@@ -53,8 +53,7 @@ namespace Alba.Interop
         {
             if (Com == null)
                 return;
-            // TODO FIX ReleaseComObject!!! (race, already released)
-            //Marshal.ReleaseComObject(Com);
+            Marshal.ReleaseComObject(Com);
             Com = null;
         }
 

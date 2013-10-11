@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Alba.Diagnostics;
 using Alba.Framework.Collections;
 using Alba.Framework.Diagnostics;
@@ -258,14 +258,14 @@ namespace Alba.Windows.Shell
             if (IsDesktop)
                 return _iconOverlayIndex = NoIconIndex;
 
-            // TODO FIX GetIconOverlayIndex!!! (interface always null)
-            Task.Run(() => {
-                int iconOverlayIndex;
-                using (NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative())
-                    iconOverlayIndex = shellIconOverlay != null ? _tree.IconList.GetIconOverlayIndex(shellIconOverlay, _pidl) : NoIconIndex;
-                Dispatcher.InvokeAsync(() =>
-                    Set(ref _iconOverlayIndex, iconOverlayIndex, "IconOverlaySmall", "IconOverlayLarge", "IconOverlayExtraLarge", "IconOverlayJumbo"));
-            });
+            Dispatcher.InvokeAsync(
+                () => {
+                    int iconOverlayIndex;
+                    using (NativeShellIconOverlay shellIconOverlay = ParentShellFolder.QueryInterface<IShellIconOverlay>().ToNative())
+                        iconOverlayIndex = shellIconOverlay != null ? _tree.IconList.GetIconOverlayIndex(shellIconOverlay, _pidl) : NoIconIndex;
+                    Set(ref _iconOverlayIndex, iconOverlayIndex, "IconOverlaySmall", "IconOverlayLarge", "IconOverlayExtraLarge", "IconOverlayJumbo");
+                },
+                DispatcherPriority.Background);
             return NoIconIndex;
         }
 
@@ -285,13 +285,14 @@ namespace Alba.Windows.Shell
                 using (PIDLIST desktopPidl = Native.SHGetKnownFolderIDList(FOLDERID.Desktop))
                     return _iconIndex = Native.SHGetFileInfo(desktopPidl, SHGFI.SYSICONINDEX).iIcon;
 
-            Task.Run(() => {
-                int iconIndex;
-                using (NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative())
-                    iconIndex = shellIcon != null ? _tree.IconList.GetIconIndex(shellIcon, _pidl, iconAttrs) : UnindexableIconIndex;
-                Dispatcher.InvokeAsync(() =>
-                    Set(ref _iconIndex, iconIndex, "IconSmall", "IconLarge", "IconExtraLarge", "IconJumbo"));
-            });
+            Dispatcher.InvokeAsync(
+                () => {
+                    int iconIndex;
+                    using (NativeShellIcon shellIcon = ParentShellFolder.QueryInterface<IShellIcon>().ToNative())
+                        iconIndex = shellIcon != null ? _tree.IconList.GetIconIndex(shellIcon, _pidl, iconAttrs) : UnindexableIconIndex;
+                    Set(ref _iconIndex, iconIndex, "IconSmall", "IconLarge", "IconExtraLarge", "IconJumbo");
+                },
+                DispatcherPriority.Background);
             return NoIconIndex;
         }
 
